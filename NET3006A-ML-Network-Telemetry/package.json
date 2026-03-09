@@ -1,0 +1,9 @@
+{
+  "name": "net3006a-ml-network-telemetry",
+  "version": "1.0.0",
+  "description": "NET3006A Survey Project - ML for Network Telemetry",
+  "private": true,
+  "dependencies": {
+    "docx": "^9.6.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "net3006a-project",
+  "version": "1.0.0",
+  "description": "NET3006A Survey Project - ML for Network Telemetry",
+  "main": "setup_project.js",
+  "dependencies": {
+    "docx": "^9.6.0"
+  }
+}
