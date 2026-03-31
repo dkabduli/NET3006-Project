@@ -175,7 +175,7 @@ def make_title_subtitle(slide, title, subtitle, presenter,
     add_presenter_tag(slide, presenter)
 
 
-TOTAL_SLIDES = 23
+TOTAL_SLIDES = 24
 ASSET_DIR = os.path.join(
     os.path.expanduser("~"),
     ".cursor",
@@ -844,7 +844,106 @@ add_slide_number(slide, 17, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 18 — Ericsson's AI-Driven Telemetry
+# SLIDE 18 — Case Study: LSTM-Based Anomaly Detection (Mazen)
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_GOLD)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Case Study: Real-Time Anomaly Detection in Network Telemetry",
+                    None, "Mazen Alhassan")
+
+# ── Section 1: The Problem ──
+add_textbox(slide, Inches(0.8), Inches(1.35), Inches(5.8), Inches(0.35),
+            "The Problem", font_size=18, color=ACCENT_BLUE, bold=True)
+
+problem_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.75), Inches(5.8), Inches(1.8))
+tf_prob = problem_box.text_frame
+tf_prob.word_wrap = True
+problem_bullets = [
+    "Telemetry streams massive time-series data (CPU, traffic, link utilization) from routers/servers in real time",
+    "Operators cannot manually monitor everything \u2014 ML is needed to automatically flag abnormal patterns",
+    "Challenge: detect anomalies in real time with low false positives, without large labeled datasets",
+]
+add_bullet_slide_content(tf_prob, [f"\u2022 {b}" for b in problem_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Section 2: The Study (AREP) ──
+add_textbox(slide, Inches(0.8), Inches(3.55), Inches(5.8), Inches(0.35),
+            "The Study: AREP (Pekar et al., 2022)", font_size=18, color=ACCENT_TEAL, bold=True)
+
+study_box = slide.shapes.add_textbox(Inches(0.8), Inches(3.95), Inches(5.8), Inches(2.2))
+tf_study = study_box.text_frame
+tf_study.word_wrap = True
+study_bullets = [
+    "Uses an LSTM neural network to predict the next telemetry data point, then compares prediction to actual value",
+    "If the difference exceeds a threshold, it flags an anomaly",
+    "Key innovation: AREP auto-tunes its detection window and ageing coefficient \u2014 no manual parameter setup",
+    "Offset compensation retrains the model when predictions start to drift",
+]
+add_bullet_slide_content(tf_study, [f"\u2022 {b}" for b in study_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Right side: Flow diagram ──
+add_textbox(slide, Inches(7.2), Inches(1.35), Inches(5.5), Inches(0.35),
+            "How AREP Works", font_size=18, color=ACCENT_PURPLE, bold=True,
+            alignment=PP_ALIGN.CENTER)
+
+flow_steps = [
+    ("Telemetry\nStream", ACCENT_BLUE),
+    ("LSTM\nPrediction", ACCENT_TEAL),
+    ("Compare to\nActual", ACCENT_PURPLE),
+    ("Anomaly\nScore", ORANGE),
+    ("Alert", RGBColor(0xE0, 0x40, 0x40)),
+]
+
+step_w = Inches(1.65)
+step_h = Inches(0.85)
+start_x = Inches(7.0)
+for i, (label, color) in enumerate(flow_steps):
+    row = i // 3
+    col = i % 3
+    x = start_x + col * Inches(1.85)
+    y = Inches(1.9) + row * Inches(1.35)
+    box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, step_w, step_h)
+    box.fill.solid()
+    box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
+    box.line.color.rgb = color
+    box.line.width = Pt(1.5)
+    add_textbox(slide, x, y + Inches(0.12), step_w, step_h - Inches(0.15),
+                label, font_size=12, color=color, bold=True, alignment=PP_ALIGN.CENTER)
+    if col < 2 and i < len(flow_steps) - 1:
+        arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW,
+            x + step_w, y + Inches(0.28), Inches(0.2), Inches(0.2))
+        arrow.fill.solid()
+        arrow.fill.fore_color.rgb = MID_GRAY
+        arrow.line.fill.background()
+
+down_arrow = slide.shapes.add_shape(MSO_SHAPE.DOWN_ARROW,
+    start_x + Inches(5.1), Inches(2.75), Inches(0.2), Inches(0.4))
+down_arrow.fill.solid()
+down_arrow.fill.fore_color.rgb = MID_GRAY
+down_arrow.line.fill.background()
+
+# ── Right side bottom: Results ──
+add_textbox(slide, Inches(7.2), Inches(3.55), Inches(5.5), Inches(0.35),
+            "Results", font_size=18, color=ORANGE, bold=True)
+
+results_box = slide.shapes.add_textbox(Inches(7.2), Inches(3.95), Inches(5.5), Inches(2.2))
+tf_res = results_box.text_frame
+tf_res.word_wrap = True
+results_bullets = [
+    "Tested on the Numenta Anomaly Benchmark (NAB) \u2014 standard for streaming anomaly detection",
+    "AREP outperformed predecessors (ReRe, Alter-Re\u00B2) on irregular telemetry patterns",
+    "Follow-up study (Pekar et al., 2024): on periodic server farm data, simpler Bayesian Changepoint (F: 0.66) beat AREP (F: 0.20)",
+    "Takeaway: LSTM excels on irregular patterns but struggles with highly periodic data \u2014 no single ML method wins everywhere",
+]
+add_bullet_slide_content(tf_res, [f"\u2022 {b}" for b in results_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 18, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 19 — Ericsson's AI-Driven Telemetry
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -877,11 +976,11 @@ add_card(
 )
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 18, TOTAL_SLIDES)
+add_slide_number(slide, 19, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 19 — Emerging Trends: 6G & GenAI
+# SLIDE 20 — Emerging Trends: 6G & GenAI
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -916,11 +1015,11 @@ add_card(slide, Inches(6.75), Inches(5.25), Inches(5.65), Inches(1.3),
          title_color=ORANGE, border_color=ORANGE, body_size=12)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 19, TOTAL_SLIDES)
+add_slide_number(slide, 20, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 20 — Open Challenges
+# SLIDE 21 — Open Challenges
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -957,11 +1056,11 @@ for i, (title, desc) in enumerate(challenges):
                 desc, font_size=12, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 20, TOTAL_SLIDES)
+add_slide_number(slide, 21, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 21 — Conclusion & Key Takeaways
+# SLIDE 22 — Conclusion & Key Takeaways
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -999,11 +1098,11 @@ for i, (title, desc) in enumerate(takeaways):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 21, TOTAL_SLIDES)
+add_slide_number(slide, 22, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 22 — Thank You & Q&A
+# SLIDE 23 — Thank You & Q&A
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -1031,11 +1130,11 @@ add_textbox(slide, Inches(1.5), Inches(5.2), Inches(10.3), Inches(0.5),
             "NET3006A — Machine Learning for Network Telemetry",
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_slide_number(slide, 22, TOTAL_SLIDES)
+add_slide_number(slide, 23, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 23 — References
+# SLIDE 24 — References
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1074,7 +1173,7 @@ for i, ref in enumerate(references):
     p.space_after = Pt(4)
     p.space_before = Pt(1)
 
-add_slide_number(slide, 23, TOTAL_SLIDES)
+add_slide_number(slide, 24, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
