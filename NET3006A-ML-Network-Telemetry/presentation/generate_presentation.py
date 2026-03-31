@@ -175,7 +175,7 @@ def make_title_subtitle(slide, title, subtitle, presenter,
     add_presenter_tag(slide, presenter)
 
 
-TOTAL_SLIDES = 26
+TOTAL_SLIDES = 27
 ASSET_DIR = os.path.join(
     os.path.expanduser("~"),
     ".cursor",
@@ -939,6 +939,9 @@ results_bullets = [
 add_bullet_slide_content(tf_res, [f"\u2022 {b}" for b in results_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
 
 add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_textbox(slide, Inches(0.4), Inches(6.9), Inches(6.0), Inches(0.3),
+            "Reference: https://link.springer.com/article/10.1007/s00521-022-08000-y",
+            font_size=8, color=MID_GRAY, alignment=PP_ALIGN.LEFT)
 add_slide_number(slide, 18, TOTAL_SLIDES)
 
 
@@ -1037,6 +1040,9 @@ r_bullets = [
 add_bullet_slide_content(tf_r, [f"\u2022 {b}" for b in r_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
 
 add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_textbox(slide, Inches(0.4), Inches(6.9), Inches(6.0), Inches(0.3),
+            "Reference: https://arxiv.org/html/2409.13179v1",
+            font_size=8, color=MID_GRAY, alignment=PP_ALIGN.LEFT)
 add_slide_number(slide, 19, TOTAL_SLIDES)
 
 
@@ -1135,11 +1141,91 @@ res_bullets3 = [
 add_bullet_slide_content(tf_res3, [f"\u2022 {b}" for b in res_bullets3], font_size=13, color=LIGHT_GRAY, spacing=6)
 
 add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_textbox(slide, Inches(0.4), Inches(6.9), Inches(6.0), Inches(0.3),
+            "Reference: https://dl.acm.org/doi/pdf/10.1109/TNET.2023.3269983",
+            font_size=8, color=MID_GRAY, alignment=PP_ALIGN.LEFT)
 add_slide_number(slide, 20, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 21 — Ericsson's AI-Driven Telemetry
+# SLIDE 21 — Comparing Case Studies: Lessons Learned (Mazen)
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_GOLD)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Lessons Learned: Comparing ML Approaches for Network Telemetry",
+                    None, "Mazen Alhassan")
+
+# Comparison table - using cards in a grid layout
+studies = [
+    ("AREP", "LSTM", "Anomaly Detection", "NAB Benchmark (streaming)", "Auto-tunes parameters", "Struggles with periodic data", ACCENT_BLUE),
+    ("ConvLSTMTransNet", "CNN+LSTM+Transformer", "Traffic Prediction", "Real ISP telemetry (SNMP)", "10% better accuracy", "More compute overhead", ACCENT_TEAL),
+    ("RouteNet-Fermi", "Graph Neural Network", "QoS Prediction", "Simulated (OMNeT++)", "Generalizes to 10x networks", "Relies on simulated data", ACCENT_PURPLE),
+]
+
+add_textbox(slide, Inches(0.8), Inches(1.5), Inches(11.5), Inches(0.35),
+            "Comparison of Three Case Studies", font_size=20, color=ACCENT_GOLD, bold=True, alignment=PP_ALIGN.CENTER)
+
+for i, (name, method, task, data, strength, limit, color) in enumerate(studies):
+    x = Inches(0.8) + Inches(i * 4.0)
+    y = Inches(2.0)
+
+    # Study name header
+    header = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, Inches(3.8), Inches(0.45))
+    header.fill.solid()
+    header.fill.fore_color.rgb = color
+    header.line.fill.background()
+    add_textbox(slide, x, y + Inches(0.05), Inches(3.8), Inches(0.35),
+                name, font_size=14, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
+
+    # Content card
+    card_y = y + Inches(0.45)
+    content_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, card_y, Inches(3.8), Inches(2.8))
+    content_card.fill.solid()
+    content_card.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
+    content_card.line.color.rgb = color
+    content_card.line.width = Pt(1.2)
+
+    # Add fields
+    fields = [
+        ("Method:", method),
+        ("Task:", task),
+        ("Data:", data),
+        ("Strength:", strength),
+        ("Limit:", limit),
+    ]
+
+    field_y = card_y + Inches(0.15)
+    for label, value in fields:
+        add_textbox(slide, x + Inches(0.15), field_y, Inches(3.5), Inches(0.2),
+                    label, font_size=10, color=color, bold=True)
+        field_y += Inches(0.25)
+        add_textbox(slide, x + Inches(0.15), field_y, Inches(3.5), Inches(0.35),
+                    value, font_size=9, color=LIGHT_GRAY)
+        field_y += Inches(0.45)
+
+# Key Takeaways section
+add_textbox(slide, Inches(0.8), Inches(5.2), Inches(11.5), Inches(0.35),
+            "Key Takeaways", font_size=18, color=ACCENT_GOLD, bold=True)
+
+takeaway_box = slide.shapes.add_textbox(Inches(0.8), Inches(5.6), Inches(11.5), Inches(1.0))
+tf_takeaway = takeaway_box.text_frame
+tf_takeaway.word_wrap = True
+takeaways = [
+    "No single ML method wins everywhere — LSTM for time-series, GNNs for topology, hybrids for best accuracy but higher cost",
+    "Telemetry data type matters — streaming time-series suits LSTM/RNN; topology + routing suits GNNs",
+    "Real-world deployment remains challenging — most use benchmarks/simulators; live telemetry with low latency is still open",
+    "Trend: combining multiple ML techniques outperforms single methods (e.g., ConvLSTMTransNet beats standalone models)",
+]
+add_bullet_slide_content(tf_takeaway, [f"\u2022 {t}" for t in takeaways], font_size=12, color=LIGHT_GRAY, spacing=4)
+
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 21, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 22 — Ericsson's AI-Driven Telemetry
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1172,11 +1258,11 @@ add_card(
 )
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 21, TOTAL_SLIDES)
+add_slide_number(slide, 22, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 22 — Emerging Trends: 6G & GenAI
+# SLIDE 23 — Emerging Trends: 6G & GenAI
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1211,11 +1297,11 @@ add_card(slide, Inches(6.75), Inches(5.25), Inches(5.65), Inches(1.3),
          title_color=ORANGE, border_color=ORANGE, body_size=12)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 22, TOTAL_SLIDES)
+add_slide_number(slide, 23, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 23 — Open Challenges
+# SLIDE 24 — Open Challenges
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1252,11 +1338,11 @@ for i, (title, desc) in enumerate(challenges):
                 desc, font_size=12, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 23, TOTAL_SLIDES)
+add_slide_number(slide, 24, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 24 — Conclusion & Key Takeaways
+# SLIDE 25 — Conclusion & Key Takeaways
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1294,11 +1380,11 @@ for i, (title, desc) in enumerate(takeaways):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 24, TOTAL_SLIDES)
+add_slide_number(slide, 25, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 25 — Thank You & Q&A
+# SLIDE 26 — Thank You & Q&A
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -1326,11 +1412,11 @@ add_textbox(slide, Inches(1.5), Inches(5.2), Inches(10.3), Inches(0.5),
             "NET3006A — Machine Learning for Network Telemetry",
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_slide_number(slide, 25, TOTAL_SLIDES)
+add_slide_number(slide, 26, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 26 — References
+# SLIDE 27 — References
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1369,7 +1455,7 @@ for i, ref in enumerate(references):
     p.space_after = Pt(4)
     p.space_before = Pt(1)
 
-add_slide_number(slide, 26, TOTAL_SLIDES)
+add_slide_number(slide, 27, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
