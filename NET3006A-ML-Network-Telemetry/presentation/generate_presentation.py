@@ -67,6 +67,11 @@ def add_textbox(slide, left, top, width, height, text, font_size=18,
     txBox = slide.shapes.add_textbox(left, top, width, height)
     tf = txBox.text_frame
     tf.word_wrap = True
+    tf.vertical_anchor = MSO_ANCHOR.TOP
+    tf.margin_left = Inches(0.05)
+    tf.margin_right = Inches(0.05)
+    tf.margin_top = Inches(0.02)
+    tf.margin_bottom = Inches(0.02)
     p = tf.paragraphs[0]
     p.text = text
     p.font.size = Pt(font_size)
@@ -75,8 +80,7 @@ def add_textbox(slide, left, top, width, height, text, font_size=18,
     p.font.name = font_name
     p.alignment = alignment
     p.space_after = Pt(0)
-    if line_spacing != 1.0:
-        p.line_spacing = Pt(font_size * line_spacing)
+    p.line_spacing = line_spacing
     return txBox
 
 
@@ -117,6 +121,7 @@ def add_image(slide, image_path, left, top, width=None, height=None):
 
 def add_bullet_slide_content(tf, bullets, font_size=18, color=WHITE, bold=False,
                               indent_level=0, font_name='Calibri', spacing=6):
+    tf.vertical_anchor = MSO_ANCHOR.TOP
     for i, bullet in enumerate(bullets):
         if i == 0:
             p = tf.paragraphs[0]
@@ -128,8 +133,9 @@ def add_bullet_slide_content(tf, bullets, font_size=18, color=WHITE, bold=False,
         p.font.bold = bold
         p.font.name = font_name
         p.level = indent_level
+        p.line_spacing = 1.2
         p.space_after = Pt(spacing)
-        p.space_before = Pt(2)
+        p.space_before = Pt(1)
 
 
 def add_presenter_tag(slide, name, color=ACCENT_BLUE):
@@ -163,7 +169,7 @@ def make_title_subtitle(slide, title, subtitle, presenter,
                 title, font_size=title_size, color=title_color,
                 bold=True, font_name='Calibri')
     if subtitle:
-        add_textbox(slide, Inches(0.8), Inches(1.05), Inches(11.5), Inches(0.45),
+        add_textbox(slide, Inches(0.8), Inches(1.12), Inches(11.5), Inches(0.48),
                     subtitle, font_size=subtitle_size, color=subtitle_color,
                     font_name='Calibri')
     add_presenter_tag(slide, presenter)
@@ -201,7 +207,7 @@ title_panel.line.fill.background()
 add_textbox(slide, Inches(1.5), Inches(1.2), Inches(10.3), Inches(1.2),
             "Machine Learning for Network Telemetry",
             font_size=44, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
-add_textbox(slide, Inches(1.5), Inches(2.5), Inches(10.3), Inches(0.7),
+add_textbox(slide, Inches(1.5), Inches(2.75), Inches(10.3), Inches(0.7),
             "A Survey of Methods, Applications, and Emerging Trends",
             font_size=24, color=ACCENT_BLUE, alignment=PP_ALIGN.CENTER)
 
@@ -387,7 +393,7 @@ arrow.fill.solid()
 arrow.fill.fore_color.rgb = MID_GRAY
 arrow.line.fill.background()
 
-add_card(slide, Inches(2.5), Inches(5.55), Inches(8.3), Inches(0.85),
+add_card(slide, Inches(2.5), Inches(5.35), Inches(8.3), Inches(1.05),
          "Main Point",
          "Better telemetry gives ML better input, and better input leads to better decisions.",
          title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=13)
@@ -419,7 +425,7 @@ for i, (title, body, color) in enumerate(sources):
     add_card(slide, x, y, Inches(5.35), Inches(1.45), title, body,
              title_color=color, border_color=color, body_size=13)
 
-add_card(slide, Inches(2.0), Inches(5.85), Inches(9.3), Inches(0.75),
+add_card(slide, Inches(2.0), Inches(5.55), Inches(9.3), Inches(1.05),
          "Why this matters",
          "ML works best when it can learn from multiple types of telemetry instead of a single signal.",
          title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=12)
@@ -481,7 +487,13 @@ challenges = [
     ("Automation is needed", "Modern networks need systems that can watch, decide, and respond."),
 ]
 
-add_icon_circle(slide, Inches(5.55), Inches(2.35), Inches(2.0), "ML", ACCENT_BLUE, font_size=30)
+# center the ML label vertically in the circle
+ml_circle = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(5.55), Inches(2.35), Inches(2.0), Inches(2.0))
+ml_circle.fill.solid()
+ml_circle.fill.fore_color.rgb = ACCENT_BLUE
+ml_circle.line.fill.background()
+add_textbox(slide, Inches(5.55), Inches(2.95), Inches(2.0), Inches(0.45),
+            "ML", font_size=30, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 add_textbox(slide, Inches(4.95), Inches(4.55), Inches(3.2), Inches(0.35),
             "Why use ML here?", font_size=16, color=ACCENT_BLUE, bold=True, alignment=PP_ALIGN.CENTER)
 
@@ -496,10 +508,10 @@ for x, y, title, body, color in card_specs:
              title_color=color, border_color=color, body_size=13)
 
 add_card(
-    slide, Inches(4.15), Inches(5.55), Inches(4.8), Inches(0.9),
+    slide, Inches(4.0), Inches(5.75), Inches(5.15), Inches(1.05),
     "What We Cover",
-    "Anomalies  |  prediction  |  QoS  |  industry  |  future trends",
-    title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=13
+    "Anomalies  |  Prediction  |  QoS  |  Industry  |  Future trends",
+    title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=12
 )
 
 add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
@@ -526,8 +538,8 @@ methods = [
 ]
 
 positions = [
-    (Inches(0.85), Inches(1.8)), (Inches(4.45), Inches(1.8)), (Inches(8.05), Inches(1.8)),
-    (Inches(2.65), Inches(4.0)), (Inches(6.25), Inches(4.0)),
+    (Inches(1.55), Inches(1.8)), (Inches(5.15), Inches(1.8)), (Inches(8.75), Inches(1.8)),
+    (Inches(3.35), Inches(4.0)), (Inches(6.95), Inches(4.0)),
 ]
 badge_colors = [ACCENT_BLUE, ACCENT_TEAL, ACCENT_BLUE, ACCENT_PURPLE, ORANGE]
 for i, (method, category, desc) in enumerate(methods):
@@ -566,17 +578,17 @@ findings = [
 ]
 
 summary_cards = [
-    ("Deep learning is strong", findings[0], ACCENT_BLUE, Inches(0.85), Inches(1.9)),
-    ("Unsupervised is practical", findings[1], ACCENT_TEAL, Inches(6.55), Inches(1.9)),
-    ("Hybrid models help", findings[2], ACCENT_PURPLE, Inches(0.85), Inches(3.95)),
-    ("Speed is still hard", findings[3], ORANGE, Inches(6.55), Inches(3.95)),
+    ("Deep learning is strong", findings[0], ACCENT_BLUE, Inches(1.3), Inches(1.9)),
+    ("Unsupervised is practical", findings[1], ACCENT_TEAL, Inches(7.0), Inches(1.9)),
+    ("Hybrid models help", findings[2], ACCENT_PURPLE, Inches(1.3), Inches(3.95)),
+    ("Speed is still hard", findings[3], ORANGE, Inches(7.0), Inches(3.95)),
 ]
 for title, body, color, x, y in summary_cards:
     add_card(slide, x, y, Inches(5.0), Inches(1.65), title, body,
              title_color=color, border_color=color, body_size=12)
 
 add_card(
-    slide, Inches(2.15), Inches(5.9), Inches(8.9), Inches(0.78),
+    slide, Inches(2.2), Inches(5.55), Inches(8.9), Inches(1.08),
     "Key Takeaway",
     "Best results often come from models that learn normal behavior first because labeled anomaly data is limited.",
     title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=12
@@ -842,56 +854,27 @@ make_title_subtitle(slide, "Industry Example: Ericsson",
                     "Combining better data organization with automation",
                     "Hashim Kshim")
 
-left_items = [
-    ("AI-Ready Data Mesh", [
-        "Ericsson treats telemetry as a shared data product, not just raw logs",
-        "Different teams manage their own data pipelines with common standards",
-        "This makes telemetry easier for ML teams to access and use",
-        "The goal is cleaner, faster, and more usable network data",
-    ]),
-]
-
-right_items = [
-    ("Transport Automation Controller (TAC)", [
-        "Uses AI/ML to watch transport network performance",
-        "Detects KPI anomalies automatically",
-        "Supports prediction for proactive capacity planning",
-        "Moves toward closed-loop automation: detect, diagnose, act",
-    ]),
-]
-
-y_start = Inches(1.7)
-for title, bullets in left_items:
-    add_textbox(slide, Inches(0.8), y_start, Inches(5.5), Inches(0.4),
-                title, font_size=17, color=ACCENT_PURPLE, bold=True)
-    y = y_start + Inches(0.5)
-    for b in bullets:
-        add_textbox(slide, Inches(1.1), y, Inches(5.2), Inches(0.35),
-                    f"• {b}", font_size=14, color=LIGHT_GRAY)
-        y += Inches(0.35)
-
-for title, bullets in right_items:
-    add_textbox(slide, Inches(7.0), y_start, Inches(5.5), Inches(0.4),
-                title, font_size=17, color=ACCENT_PURPLE, bold=True)
-    y = y_start + Inches(0.5)
-    for b in bullets:
-        add_textbox(slide, Inches(7.3), y, Inches(5.2), Inches(0.35),
-                    f"• {b}", font_size=14, color=LIGHT_GRAY)
-        y += Inches(0.35)
-
-# bottom insight
-box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-    Inches(0.8), Inches(4.5), Inches(11.7), Inches(1.8))
-box.fill.solid()
-box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-box.line.color.rgb = ACCENT_PURPLE
-box.line.width = Pt(1.5)
-
-add_textbox(slide, Inches(1.1), Inches(4.65), Inches(11.2), Inches(0.35),
-            "Key Industry Insight", font_size=15, color=ACCENT_PURPLE, bold=True)
-add_textbox(slide, Inches(1.1), Inches(5.05), Inches(11.2), Inches(1.0),
-            "Ericsson's message is that good AI needs good data foundations. Better telemetry pipelines make automation and prediction much more realistic.",
-            font_size=13, color=LIGHT_GRAY, line_spacing=1.4)
+add_card(
+    slide, Inches(0.85), Inches(1.75), Inches(5.6), Inches(2.75),
+    "AI-Ready Data Mesh",
+    "Ericsson treats telemetry as a shared data product, not just raw logs.\n\n"
+    "Teams manage domain pipelines with common standards, which improves data quality and makes telemetry easier for ML teams to use.",
+    title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE, body_size=13
+)
+add_card(
+    slide, Inches(6.85), Inches(1.75), Inches(5.6), Inches(2.75),
+    "Transport Automation Controller (TAC)",
+    "Uses AI/ML to monitor transport performance, detect KPI anomalies, and support proactive capacity planning.\n\n"
+    "Direction: closed-loop automation through detect, diagnose, and act workflows.",
+    title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE, body_size=13
+)
+add_card(
+    slide, Inches(1.45), Inches(4.95), Inches(10.4), Inches(1.45),
+    "Key Industry Insight",
+    "Ericsson shows that good AI outcomes depend on strong telemetry and data foundations. "
+    "Better data pipelines make network automation and prediction more realistic at scale.",
+    title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE, body_size=13
+)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
 add_slide_number(slide, 18, TOTAL_SLIDES)
