@@ -79,6 +79,32 @@ def add_textbox(slide, left, top, width, height, text, font_size=18,
     return txBox
 
 
+def add_card(slide, left, top, width, height, title, body,
+             title_color=WHITE, border_color=ACCENT_BLUE,
+             fill_color=RGBColor(0x14, 0x18, 0x32),
+             title_size=16, body_size=13, body_color=LIGHT_GRAY):
+    shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = fill_color
+    shape.line.color.rgb = border_color
+    shape.line.width = Pt(1.4)
+    add_textbox(slide, left + Inches(0.18), top + Inches(0.15), width - Inches(0.36), Inches(0.35),
+                title, font_size=title_size, color=title_color, bold=True)
+    add_textbox(slide, left + Inches(0.18), top + Inches(0.55), width - Inches(0.36), height - Inches(0.7),
+                body, font_size=body_size, color=body_color, line_spacing=1.3)
+    return shape
+
+
+def add_icon_circle(slide, left, top, size, text, fill_color, font_size=20):
+    circ = slide.shapes.add_shape(MSO_SHAPE.OVAL, left, top, size, size)
+    circ.fill.solid()
+    circ.fill.fore_color.rgb = fill_color
+    circ.line.fill.background()
+    add_textbox(slide, left, top + Inches(0.03), size, size - Inches(0.03),
+                text, font_size=font_size, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
+    return circ
+
+
 def add_bullet_slide_content(tf, bullets, font_size=18, color=WHITE, bold=False,
                               indent_level=0, font_name='Calibri', spacing=6):
     for i, bullet in enumerate(bullets):
@@ -172,6 +198,18 @@ add_textbox(slide, Inches(1.5), Inches(5.85), Inches(10.3), Inches(0.4),
             "Option 1: Survey / Reading Project  —  Topic 2",
             font_size=14, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
+for i, (label, color) in enumerate([
+    ("Detect", ACCENT_BLUE), ("Predict", ACCENT_TEAL), ("Optimize", ACCENT_PURPLE)
+]):
+    x = Inches(2.35) + Inches(i * 3.0)
+    card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, Inches(6.3), Inches(2.2), Inches(0.55))
+    card.fill.solid()
+    card.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
+    card.line.color.rgb = color
+    card.line.width = Pt(1.2)
+    add_textbox(slide, x, Inches(6.42), Inches(2.2), Inches(0.3),
+                label, font_size=12, color=color, bold=True, alignment=PP_ALIGN.CENTER)
+
 add_slide_number(slide, 1, TOTAL_SLIDES)
 
 
@@ -186,19 +224,19 @@ make_title_subtitle(slide, "Presentation Outline", None, "Abdul Rehman")
 
 items = [
     ("1.", "Introduction & Motivation", "Abdul Rehman"),
-    ("2.", "What is Network Telemetry?", "Abdul Rehman"),
-    ("3.", "Why ML for Network Telemetry?", "Abdul Rehman"),
-    ("4.", "ML Methods for Anomaly Detection", "Abdul Rehman"),
-    ("5.", "Anomaly Detection: Key Findings", "Abdul Rehman"),
-    ("6.", "ML for Performance Prediction", "Esam Mukbil"),
-    ("7.", "ML for QoS Optimization", "Esam Mukbil"),
-    ("8.", "Performance & QoS: Key Findings", "Esam Mukbil"),
-    ("9.", "Telemetry Data Pipeline & Architecture", "Esam Mukbil"),
-    ("10.", "Industry: Nokia's Telemetry Solutions", "Hashim Kshim"),
-    ("11.", "Industry: Ericsson's AI-Driven Telemetry", "Hashim Kshim"),
-    ("12.", "Emerging Trends: 6G & GenAI for Telemetry", "Hashim Kshim"),
-    ("13.", "Open Challenges & Future Directions", "Hashim Kshim"),
-    ("14.", "Conclusion & Key Takeaways", "Hashim Kshim"),
+    ("2.", "What Network Telemetry Means", "Abdul Rehman"),
+    ("3.", "Why Machine Learning Helps", "Abdul Rehman"),
+    ("4.", "Anomaly Detection Methods", "Abdul Rehman"),
+    ("5.", "Main Lessons from Anomaly Detection", "Abdul Rehman"),
+    ("6.", "Performance Prediction", "Esam Mukbil"),
+    ("7.", "QoS Optimization", "Esam Mukbil"),
+    ("8.", "Main Lessons for Performance & QoS", "Esam Mukbil"),
+    ("9.", "Telemetry Pipeline", "Esam Mukbil"),
+    ("10.", "Nokia Example", "Hashim Kshim"),
+    ("11.", "Ericsson Example", "Hashim Kshim"),
+    ("12.", "Future Trends: 6G & GenAI", "Hashim Kshim"),
+    ("13.", "Open Challenges", "Hashim Kshim"),
+    ("14.", "Conclusion", "Hashim Kshim"),
 ]
 
 start_y = Inches(1.6)
@@ -252,43 +290,45 @@ add_bg(slide)
 add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "What is Network Telemetry?",
-                    "Real-time, automated collection and streaming of network data",
+                    "The network continuously reports what is happening inside it",
                     "Abdul Rehman")
 
 txBox = slide.shapes.add_textbox(Inches(0.8), Inches(1.7), Inches(6.0), Inches(4.8))
 tf = txBox.text_frame
 tf.word_wrap = True
 bullets = [
-    "Network telemetry = automated, real-time collection of operational data from network devices and infrastructure",
-    "Data sources include flow statistics, packet traces, SNMP counters, syslog, and in-band network telemetry (INT)",
-    "Evolved from traditional polling-based monitoring (SNMP) to push-based streaming models",
-    "Enables fine-grained visibility into network state: latency, jitter, packet loss, throughput, error rates",
-    "Foundation for closed-loop network automation — observe, orient, decide, act",
-    "Critical for modern networks: 5G, SDN/NFV, cloud-native, and multi-domain environments",
+    "It is the live data that routers, switches, and links send about their health and traffic.",
+    "It tells us things like delay, packet loss, throughput, CPU use, and errors.",
+    "Modern systems stream this data automatically instead of waiting for slow manual checks.",
+    "That gives operators a clearer and faster view of what the network is doing.",
+    "Telemetry is the input that ML uses to spot trouble and predict future problems.",
 ]
-add_bullet_slide_content(tf, bullets, font_size=16, color=WHITE, spacing=8)
+add_bullet_slide_content(tf, bullets, font_size=17, color=WHITE, spacing=10)
 
-# right-side info box
-box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-    Inches(7.4), Inches(1.7), Inches(5.4), Inches(4.5))
-box.fill.solid()
-box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-box.line.color.rgb = ACCENT_BLUE
-box.line.width = Pt(1.5)
+# right-side visual panel
+add_textbox(slide, Inches(7.55), Inches(1.8), Inches(4.8), Inches(0.4),
+            "Simple View", font_size=16, color=ACCENT_BLUE, bold=True, alignment=PP_ALIGN.CENTER)
+for x, label, color in [
+    (Inches(7.75), "Devices", ACCENT_BLUE),
+    (Inches(9.45), "Data", ACCENT_TEAL),
+    (Inches(11.15), "ML", ACCENT_PURPLE),
+]:
+    add_icon_circle(slide, x, Inches(2.45), Inches(1.05), "", color)
+    add_textbox(slide, x, Inches(2.78), Inches(1.05), Inches(0.35),
+                label, font_size=13, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 
-add_textbox(slide, Inches(7.7), Inches(1.9), Inches(4.8), Inches(0.5),
-            "Key Telemetry Data Types", font_size=16, color=ACCENT_BLUE, bold=True)
-types_box = slide.shapes.add_textbox(Inches(7.7), Inches(2.5), Inches(4.8), Inches(3.5))
-tf2 = types_box.text_frame
-tf2.word_wrap = True
-type_bullets = [
-    "Flow Statistics — NetFlow/IPFIX records of traffic flows",
-    "Packet Traces — Full or sampled packet captures",
-    "In-Band Telemetry (INT) — Hop-by-hop metadata embedded in packets",
-    "Device Metrics — CPU, memory, interface counters via gNMI/gRPC",
-    "Network Logs — Syslog, event logs, configuration changes",
-]
-add_bullet_slide_content(tf2, type_bullets, font_size=13, color=LIGHT_GRAY, spacing=6)
+for x in [Inches(8.85), Inches(10.55)]:
+    arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, x, Inches(2.78), Inches(0.45), Inches(0.22))
+    arrow.fill.solid()
+    arrow.fill.fore_color.rgb = MID_GRAY
+    arrow.line.fill.background()
+
+add_card(
+    slide, Inches(7.45), Inches(4.05), Inches(5.45), Inches(2.0),
+    "Examples of Telemetry Data",
+    "Flow data\nPacket traces\nDevice metrics\nINT path details\nLogs and events",
+    title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=14
+)
 
 add_presenter_tag(slide, "Abdul Rehman")
 add_slide_number(slide, 4, TOTAL_SLIDES)
@@ -302,50 +342,37 @@ add_bg(slide)
 add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "Why Apply ML to Network Telemetry?",
-                    "The volume and complexity of telemetry data demands intelligent analysis",
+                    "The challenge is not collecting data. It is understanding it fast enough.",
                     "Abdul Rehman")
 
 challenges = [
-    ("Volume & Velocity", "Modern networks generate terabytes of telemetry daily; manual analysis is infeasible"),
-    ("Complex Patterns", "Anomalies and performance degradation involve subtle, multi-dimensional correlations"),
-    ("Real-Time Demands", "Network operators need sub-second detection and response times"),
-    ("Dynamic Environments", "Traffic patterns, topologies, and workloads constantly evolve — static rules fail"),
-    ("Automation Gap", "5G/6G and SDN require autonomous, closed-loop management at scale"),
+    ("Too much data", "Large networks create huge streams of measurements every second."),
+    ("Problems are hidden", "Bad behavior can come from many small signals happening together."),
+    ("Speed matters", "Teams need to detect and react before users feel the problem."),
+    ("Networks keep changing", "Traffic, apps, and paths move, so fixed thresholds stop working."),
+    ("Automation is needed", "Modern networks need systems that can watch, decide, and respond."),
 ]
 
-for i, (title, desc) in enumerate(challenges):
-    y = Inches(1.75) + Inches(i * 0.95)
-    # accent dot
-    dot = slide.shapes.add_shape(MSO_SHAPE.OVAL,
-        Inches(0.9), y + Inches(0.08), Inches(0.18), Inches(0.18))
-    dot.fill.solid()
-    dot.fill.fore_color.rgb = ACCENT_BLUE
-    dot.line.fill.background()
-    add_textbox(slide, Inches(1.3), y, Inches(11), Inches(0.35),
-                title, font_size=18, color=ACCENT_BLUE, bold=True)
-    add_textbox(slide, Inches(1.3), y + Inches(0.35), Inches(11), Inches(0.45),
-                desc, font_size=15, color=LIGHT_GRAY)
+add_icon_circle(slide, Inches(5.55), Inches(2.35), Inches(2.0), "ML", ACCENT_BLUE, font_size=30)
+add_textbox(slide, Inches(4.95), Inches(4.55), Inches(3.2), Inches(0.35),
+            "Why use ML here?", font_size=16, color=ACCENT_BLUE, bold=True, alignment=PP_ALIGN.CENTER)
 
-# right box: survey scope
-box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-    Inches(8.5), Inches(1.7), Inches(4.5), Inches(2.5))
-box.fill.solid()
-box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-box.line.color.rgb = ACCENT_TEAL
-box.line.width = Pt(1.5)
-
-add_textbox(slide, Inches(8.8), Inches(1.85), Inches(4.0), Inches(0.4),
-            "Our Survey Scope", font_size=15, color=ACCENT_TEAL, bold=True)
-scope_box = slide.shapes.add_textbox(Inches(8.8), Inches(2.35), Inches(4.0), Inches(1.7))
-tf3 = scope_box.text_frame
-tf3.word_wrap = True
-scope_items = [
-    "Anomaly detection in telemetry",
-    "Performance prediction & QoS",
-    "Industry implementations",
-    "Emerging trends (6G, GenAI)",
+card_specs = [
+    (Inches(0.9), Inches(1.9), "Too much data", "Large networks create huge telemetry streams every second.", ACCENT_BLUE),
+    (Inches(0.9), Inches(4.15), "Problems are hidden", "Small clues across many signals are hard to notice manually.", ACCENT_TEAL),
+    (Inches(8.25), Inches(1.9), "Speed matters", "Teams need answers before users feel the problem.", ACCENT_PURPLE),
+    (Inches(8.25), Inches(4.15), "Networks change", "Traffic and paths move, so fixed rules become outdated.", ORANGE),
 ]
-add_bullet_slide_content(tf3, scope_items, font_size=13, color=LIGHT_GRAY, spacing=5)
+for x, y, title, body, color in card_specs:
+    add_card(slide, x, y, Inches(3.9), Inches(1.55), title, body,
+             title_color=color, border_color=color, body_size=13)
+
+add_card(
+    slide, Inches(4.15), Inches(5.55), Inches(4.8), Inches(0.9),
+    "What We Cover",
+    "Anomalies  |  prediction  |  QoS  |  industry  |  future trends",
+    title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=13
+)
 
 add_presenter_tag(slide, "Abdul Rehman")
 add_slide_number(slide, 5, TOTAL_SLIDES)
@@ -358,33 +385,34 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "ML Methods for Anomaly Detection in Telemetry",
-                    "Detecting unusual patterns in network data streams",
+make_title_subtitle(slide, "ML Methods for Anomaly Detection",
+                    "A visual summary of the main model families",
                     "Abdul Rehman")
 
 methods = [
-    ("Autoencoders (AE)", "Unsupervised", "Learn normal traffic patterns; flag high-reconstruction-error samples as anomalies. Effective for zero-day attack detection."),
-    ("LSTM / GRU Networks", "Deep Learning", "Capture temporal dependencies in time-series telemetry. Predict expected values; deviations signal anomalies."),
-    ("Isolation Forest", "Unsupervised", "Tree-based method that isolates anomalies efficiently. Low computational cost, suitable for real-time streaming."),
-    ("One-Class SVM", "Semi-supervised", "Learns a boundary around normal data. Effective when labeled anomaly data is scarce or unavailable."),
-    ("GAN-based Detection", "Generative", "Generator learns normal distribution; discriminator detects out-of-distribution samples as anomalies."),
+    ("Autoencoders", "Unsupervised", "Learn what normal traffic looks like. If new data looks very different, it may be an anomaly."),
+    ("LSTM / GRU", "Deep Learning", "Look at patterns over time. They help catch spikes, drops, or strange sequences in telemetry."),
+    ("Isolation Forest", "Unsupervised", "Quickly separates unusual points from common ones. Useful when speed is important."),
+    ("One-Class SVM", "Semi-supervised", "Builds a boundary around normal behavior, then flags data outside that boundary."),
+    ("GAN-based Models", "Generative", "Generate or compare normal-looking samples so unusual behavior stands out more clearly."),
 ]
 
+positions = [
+    (Inches(0.85), Inches(1.8)), (Inches(4.45), Inches(1.8)), (Inches(8.05), Inches(1.8)),
+    (Inches(2.65), Inches(4.0)), (Inches(6.25), Inches(4.0)),
+]
+badge_colors = [ACCENT_BLUE, ACCENT_TEAL, ACCENT_BLUE, ACCENT_PURPLE, ORANGE]
 for i, (method, category, desc) in enumerate(methods):
-    y = Inches(1.7) + Inches(i * 1.05)
-    # category badge
+    x, y = positions[i]
+    add_card(slide, x, y, Inches(3.05), Inches(1.6), method, desc,
+             title_color=WHITE, border_color=badge_colors[i], body_size=12)
     badge = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-        Inches(0.8), y, Inches(1.6), Inches(0.32))
+        x + Inches(1.95), y - Inches(0.18), Inches(0.92), Inches(0.28))
     badge.fill.solid()
-    badge_colors = [ACCENT_BLUE, ACCENT_TEAL, ACCENT_BLUE, ACCENT_PURPLE, ORANGE]
     badge.fill.fore_color.rgb = badge_colors[i]
     badge.line.fill.background()
-    add_textbox(slide, Inches(0.8), y + Inches(0.02), Inches(1.6), Inches(0.3),
-                category, font_size=10, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
-    add_textbox(slide, Inches(2.6), y, Inches(4.5), Inches(0.35),
-                method, font_size=17, color=WHITE, bold=True)
-    add_textbox(slide, Inches(2.6), y + Inches(0.35), Inches(10), Inches(0.55),
-                desc, font_size=13, color=LIGHT_GRAY)
+    add_textbox(slide, x + Inches(1.95), y - Inches(0.16), Inches(0.92), Inches(0.24),
+                category, font_size=8, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 
 add_presenter_tag(slide, "Abdul Rehman")
 add_slide_number(slide, 6, TOTAL_SLIDES)
@@ -397,47 +425,34 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Anomaly Detection: Key Findings from the Literature",
-                    "Patterns and insights across surveyed papers",
+make_title_subtitle(slide, "Anomaly Detection: Main Lessons",
+                    "Less text, stronger takeaways",
                     "Abdul Rehman")
 
 findings = [
-    "Deep learning methods (LSTM, Autoencoders) consistently outperform traditional statistical approaches for multi-variate telemetry anomaly detection",
-    "Unsupervised methods are favored in practice — labeled anomaly data is extremely scarce in real network environments",
-    "Hybrid approaches (e.g., Autoencoder + Isolation Forest) combine strengths: representation learning with efficient anomaly scoring",
-    "Real-time detection remains challenging: most deep learning models require significant computational resources for inference at line-rate",
-    "Transfer learning shows promise for generalizing anomaly detection across different network domains without full retraining",
-    "In-band telemetry (INT) provides richer features than traditional flow data, improving detection accuracy by 15–25% in recent studies",
+    "Deep learning often beats older statistical methods when telemetry has many features.",
+    "Unsupervised learning is popular because real networks rarely have enough labeled anomaly data.",
+    "Hybrid models work well because they mix strong feature learning with fast scoring.",
+    "Real-time use is still hard because accurate models can be expensive to run at scale.",
+    "Richer telemetry, especially INT, usually improves anomaly detection quality.",
 ]
 
-txBox = slide.shapes.add_textbox(Inches(0.8), Inches(1.7), Inches(11.5), Inches(5.0))
-tf = txBox.text_frame
-tf.word_wrap = True
+summary_cards = [
+    ("Deep learning is strong", findings[0], ACCENT_BLUE, Inches(0.85), Inches(1.9)),
+    ("Unsupervised is practical", findings[1], ACCENT_TEAL, Inches(6.55), Inches(1.9)),
+    ("Hybrid models help", findings[2], ACCENT_PURPLE, Inches(0.85), Inches(3.95)),
+    ("Speed is still hard", findings[3], ORANGE, Inches(6.55), Inches(3.95)),
+]
+for title, body, color, x, y in summary_cards:
+    add_card(slide, x, y, Inches(5.0), Inches(1.65), title, body,
+             title_color=color, border_color=color, body_size=12)
 
-for i, finding in enumerate(findings):
-    if i == 0:
-        p = tf.paragraphs[0]
-    else:
-        p = tf.add_paragraph()
-    p.text = finding
-    p.font.size = Pt(16)
-    p.font.color.rgb = WHITE
-    p.font.name = 'Calibri'
-    p.space_after = Pt(12)
-    p.space_before = Pt(4)
-
-# highlight box
-box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-    Inches(8.2), Inches(5.0), Inches(4.8), Inches(1.5))
-box.fill.solid()
-box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-box.line.color.rgb = ACCENT_BLUE
-box.line.width = Pt(1.5)
-add_textbox(slide, Inches(8.5), Inches(5.15), Inches(4.2), Inches(0.4),
-            "Key Takeaway", font_size=14, color=ACCENT_BLUE, bold=True)
-add_textbox(slide, Inches(8.5), Inches(5.55), Inches(4.2), Inches(0.8),
-            "Unsupervised deep learning is the dominant paradigm — driven by the scarcity of labeled anomaly data in production networks.",
-            font_size=12, color=LIGHT_GRAY)
+add_card(
+    slide, Inches(2.15), Inches(5.9), Inches(8.9), Inches(0.78),
+    "Key Takeaway",
+    "Best results often come from models that learn normal behavior first because labeled anomaly data is limited.",
+    title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=12
+)
 
 add_presenter_tag(slide, "Abdul Rehman")
 add_slide_number(slide, 7, TOTAL_SLIDES)
@@ -468,19 +483,19 @@ add_bg(slide)
 add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML for Network Performance Prediction",
-                    "Forecasting delay, jitter, packet loss, and throughput from telemetry data",
+                    "Using telemetry to estimate what the network will do next",
                     "Esam Mukbil")
 
 items_left = [
     ("Time-Series Forecasting", [
-        "LSTM and GRU networks model temporal dependencies in traffic metrics",
-        "Predict future values of delay, jitter, and throughput",
-        "Sliding-window approaches on streaming telemetry data",
+        "LSTM and GRU models learn how metrics change over time",
+        "They forecast delay, jitter, loss, and throughput",
+        "Useful when recent behavior helps predict the near future",
     ]),
     ("Graph Neural Networks (GNNs)", [
-        "Model network topology as a graph — nodes = devices, edges = links",
-        "RouteNet-Fermi: GNN architecture for per-flow delay/jitter prediction",
-        "Capture spatial correlations that time-series models miss",
+        "Represent the network as devices and links in a graph",
+        "Good for path-based prediction because topology matters",
+        "They capture how one congested link can affect other paths",
     ]),
 ]
 
@@ -498,14 +513,14 @@ for title, bullets in items_left:
 # right column
 items_right = [
     ("Ensemble & Hybrid Methods", [
-        "Combine multiple models (e.g., LSTM + Random Forest) for robust predictions",
-        "Stacking and boosting improve accuracy over single models",
-        "Adaptive ensembles handle concept drift in network traffic",
+        "Combine different models to improve robustness",
+        "Often more accurate than relying on one model alone",
+        "Can adapt better when traffic patterns shift",
     ]),
     ("Attention Mechanisms", [
-        "Transformer-based models capture long-range dependencies",
-        "Self-attention weights highlight which telemetry features matter most",
-        "Emerging as state-of-the-art for multi-variate network forecasting",
+        "Transformer-style models look at longer patterns in the data",
+        "They help identify which signals matter most",
+        "Strong option for large, multi-feature telemetry streams",
     ]),
 ]
 
@@ -532,14 +547,14 @@ add_bg(slide)
 add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML for QoS Optimization",
-                    "Using predicted telemetry to maintain service-level agreements",
+                    "Using telemetry and predictions to keep service quality high",
                     "Esam Mukbil")
 
 qos_methods = [
-    ("Reinforcement Learning (RL)", "Agents learn optimal routing/scheduling policies by interacting with the network environment. DQN and PPO are widely used for real-time QoS-aware traffic engineering."),
-    ("Deep Q-Networks (DQN)", "Map network state (telemetry features) to optimal actions (e.g., rerouting flows). Effective for dynamic bandwidth allocation and load balancing."),
-    ("Multi-Objective Optimization", "Balance competing QoS metrics (latency vs. throughput vs. fairness) using Pareto-optimal ML solutions. Neural networks approximate the Pareto front."),
-    ("Federated Learning", "Train QoS models across distributed network domains without sharing raw telemetry data. Preserves privacy while enabling cross-domain optimization."),
+    ("Reinforcement Learning", "An agent tries actions and learns which routing or scheduling choices give better QoS."),
+    ("Deep Q-Networks", "Use the current network state to choose actions like rerouting, balancing load, or assigning bandwidth."),
+    ("Multi-Objective Optimization", "Helps balance trade-offs such as low delay, good throughput, and fairness at the same time."),
+    ("Federated Learning", "Lets different domains train shared models without sending all raw telemetry to one place."),
 ]
 
 for i, (method, desc) in enumerate(qos_methods):
@@ -566,19 +581,19 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Performance Prediction & QoS: Key Findings",
-                    "Insights from recent academic and industry literature",
+make_title_subtitle(slide, "Performance & QoS: Main Lessons",
+                    "What stood out most across the literature",
                     "Esam Mukbil")
 
 findings = [
-    ("GNNs > Time-Series for Topology-Aware Prediction",
-     "Graph neural networks outperform pure time-series models when network topology matters — they capture how congestion propagates across paths and links."),
-    ("RL for QoS Is Promising but Hard to Deploy",
-     "Reinforcement learning achieves near-optimal QoS policies in simulation, but real-world deployment faces challenges: safety constraints, exploration risk, and training instability."),
-    ("Data Quality Is the Bottleneck",
-     "Prediction accuracy depends heavily on telemetry data quality. Missing values, sampling artifacts, and clock synchronization issues degrade model performance significantly."),
-    ("Proactive > Reactive Management",
-     "ML-driven proactive management (predict-then-act) reduces SLA violations by 30–50% compared to reactive threshold-based approaches in studied deployments."),
+    ("Topology matters",
+     "GNNs usually beat plain time-series models when the shape of the network affects performance."),
+    ("RL is powerful but risky",
+     "Reinforcement learning looks strong in simulations, but deployment is harder because bad actions can hurt live traffic."),
+    ("Good data matters most",
+     "Missing or noisy telemetry can hurt prediction quality more than model choice."),
+    ("Proactive beats reactive",
+     "Predicting trouble early is better than waiting for thresholds to fail after users are already affected."),
 ]
 
 for i, (title, desc) in enumerate(findings):
@@ -607,19 +622,19 @@ add_bg(slide)
 add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML-Enhanced Network Telemetry Pipeline",
-                    "How ML integrates into modern telemetry architectures",
+                    "A cleaner flow from data to action",
                     "Esam Mukbil")
 
 stages = [
-    ("1. Collection", "gNMI, gRPC,\nINT, NetFlow", ACCENT_BLUE),
-    ("2. Ingestion", "Stream processing\nKafka, Flink", RGBColor(0x00, 0xB4, 0xD8)),
-    ("3. Storage", "Time-series DB\nData lakes", ACCENT_TEAL),
-    ("4. ML Analysis", "Anomaly detection\nPrediction, RL", ACCENT_PURPLE),
-    ("5. Action", "Auto-remediation\nPolicy updates", ORANGE),
+    ("1. Collect", "gNMI, gRPC,\nINT, NetFlow", ACCENT_BLUE),
+    ("2. Move", "Streaming tools\nKafka, Flink", RGBColor(0x00, 0xB4, 0xD8)),
+    ("3. Store", "Time-series DB\nData lakes", ACCENT_TEAL),
+    ("4. Analyze", "Detection,\nprediction, RL", ACCENT_PURPLE),
+    ("5. Act", "Alerts,\npolicy changes", ORANGE),
 ]
 
-box_width = Inches(2.1)
-gap = Inches(0.25)
+box_width = Inches(2.15)
+gap = Inches(0.18)
 start_x = Inches(0.8)
 box_y = Inches(2.3)
 box_h = Inches(2.0)
@@ -631,10 +646,11 @@ for i, (title, desc, color) in enumerate(stages):
     box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
     box.line.color.rgb = color
     box.line.width = Pt(2)
-    add_textbox(slide, x + Inches(0.15), box_y + Inches(0.2), box_width - Inches(0.3), Inches(0.35),
-                title, font_size=15, color=color, bold=True, alignment=PP_ALIGN.CENTER)
-    add_textbox(slide, x + Inches(0.15), box_y + Inches(0.7), box_width - Inches(0.3), Inches(1.2),
-                desc, font_size=13, color=LIGHT_GRAY, alignment=PP_ALIGN.CENTER)
+    add_icon_circle(slide, x + Inches(0.72), box_y + Inches(0.18), Inches(0.7), str(i + 1), color, font_size=18)
+    add_textbox(slide, x + Inches(0.12), box_y + Inches(0.95), box_width - Inches(0.24), Inches(0.32),
+                title, font_size=14, color=color, bold=True, alignment=PP_ALIGN.CENTER)
+    add_textbox(slide, x + Inches(0.12), box_y + Inches(1.26), box_width - Inches(0.24), Inches(0.52),
+                desc, font_size=12, color=LIGHT_GRAY, alignment=PP_ALIGN.CENTER)
     # arrow between boxes
     if i < len(stages) - 1:
         arrow_x = x + box_width
@@ -646,9 +662,8 @@ for i, (title, desc, color) in enumerate(stages):
 
 # bottom note
 add_textbox(slide, Inches(0.8), Inches(4.8), Inches(11.5), Inches(1.5),
-            "Modern telemetry pipelines are evolving from passive data collection to active, ML-driven closed-loop systems. "
-            "The integration of ML at the analysis stage enables proactive network management — transforming raw telemetry "
-            "into actionable insights and automated responses in near real-time.",
+            "The big idea is simple: collect data, analyze it with ML, then use the result to help the network respond faster. "
+            "That is what turns monitoring into intelligent network management.",
             font_size=14, color=LIGHT_GRAY, line_spacing=1.4)
 
 add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
@@ -679,45 +694,32 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_PURPLE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Industry: Nokia's Modern Broadband Network Telemetry",
-                    "From reactive monitoring to AI-driven network intelligence",
+make_title_subtitle(slide, "Industry Example: Nokia",
+                    "Showing what ML-driven telemetry looks like in practice",
                     "Hashim Kshim")
 
-# left column
-left_bullets = [
-    "Nokia's broadband telemetry platform collects streaming data from millions of endpoints in real time",
-    "Employs ML for predictive maintenance — detecting degrading CPE and fiber links before failures occur",
-    "Automated root-cause analysis reduces mean time to resolution (MTTR) from hours to minutes",
-    "Leverages unsupervised clustering to group similar network behaviors and detect fleet-wide anomalies",
-    "Integration with Nokia AVA platform for AI-as-a-service in telco environments",
-]
+add_card(slide, Inches(0.85), Inches(1.9), Inches(3.8), Inches(1.6),
+         "Collect", "Gather live broadband telemetry from many devices.",
+         title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE)
+add_card(slide, Inches(4.75), Inches(1.9), Inches(3.8), Inches(1.6),
+         "Analyze", "Use ML to detect anomalies and estimate risk.",
+         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL)
+add_card(slide, Inches(8.65), Inches(1.9), Inches(3.8), Inches(1.6),
+         "Act", "Support faster troubleshooting and predictive maintenance.",
+         title_color=ORANGE, border_color=ORANGE)
 
-txBox = slide.shapes.add_textbox(Inches(0.8), Inches(1.7), Inches(6.0), Inches(4.8))
-tf = txBox.text_frame
-tf.word_wrap = True
-add_bullet_slide_content(tf, left_bullets, font_size=15, color=LIGHT_GRAY, spacing=10)
+for x in [Inches(4.2), Inches(8.1)]:
+    arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, x, Inches(2.52), Inches(0.35), Inches(0.22))
+    arrow.fill.solid()
+    arrow.fill.fore_color.rgb = MID_GRAY
+    arrow.line.fill.background()
 
-# right box
-box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-    Inches(7.2), Inches(1.7), Inches(5.6), Inches(3.5))
-box.fill.solid()
-box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-box.line.color.rgb = ACCENT_PURPLE
-box.line.width = Pt(1.5)
-
-add_textbox(slide, Inches(7.5), Inches(1.9), Inches(5.0), Inches(0.4),
-            "Nokia's Key ML Capabilities", font_size=15, color=ACCENT_PURPLE, bold=True)
-cap_box = slide.shapes.add_textbox(Inches(7.5), Inches(2.4), Inches(5.0), Inches(2.6))
-tf_cap = cap_box.text_frame
-tf_cap.word_wrap = True
-caps = [
-    "Predictive maintenance using supervised ML models",
-    "Anomaly detection via unsupervised clustering",
-    "Customer experience scoring with ensemble models",
-    "Network capacity forecasting with time-series DL",
-    "Automated incident correlation and root-cause analysis",
-]
-add_bullet_slide_content(tf_cap, caps, font_size=13, color=LIGHT_GRAY, spacing=6)
+add_card(
+    slide, Inches(1.45), Inches(4.15), Inches(10.4), Inches(1.7),
+    "What Nokia Is Trying To Do",
+    "Predict failures early  |  find unusual behavior automatically  |  estimate customer experience  |  forecast capacity needs  |  speed up troubleshooting",
+    title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE, body_size=14
+)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
 add_slide_number(slide, 14, TOTAL_SLIDES)
@@ -730,25 +732,25 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_PURPLE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Industry: Ericsson's AI-Driven Network Telemetry",
-                    "Data mesh architecture and Transport Automation Controller",
+make_title_subtitle(slide, "Industry Example: Ericsson",
+                    "Combining better data organization with automation",
                     "Hashim Kshim")
 
 left_items = [
-    ("From Data Mess to AI-Ready Data Mesh", [
-        "Ericsson advocates a 'data mesh' approach to telemetry",
-        "Distributed data ownership with domain-specific telemetry pipelines",
-        "Self-serve data infrastructure enabling ML teams across domains",
-        "Focus on data quality, governance, and real-time accessibility",
+    ("AI-Ready Data Mesh", [
+        "Ericsson treats telemetry as a shared data product, not just raw logs",
+        "Different teams manage their own data pipelines with common standards",
+        "This makes telemetry easier for ML teams to access and use",
+        "The goal is cleaner, faster, and more usable network data",
     ]),
 ]
 
 right_items = [
     ("Transport Automation Controller (TAC)", [
-        "AI/ML at the helm of transport network performance visualization",
-        "Automated anomaly detection on KPI time-series data",
-        "Predictive analytics for proactive capacity planning",
-        "Closed-loop automation: detect → diagnose → remediate",
+        "Uses AI/ML to watch transport network performance",
+        "Detects KPI anomalies automatically",
+        "Supports prediction for proactive capacity planning",
+        "Moves toward closed-loop automation: detect, diagnose, act",
     ]),
 ]
 
@@ -782,11 +784,7 @@ box.line.width = Pt(1.5)
 add_textbox(slide, Inches(1.1), Inches(4.65), Inches(11.2), Inches(0.35),
             "Key Industry Insight", font_size=15, color=ACCENT_PURPLE, bold=True)
 add_textbox(slide, Inches(1.1), Inches(5.05), Inches(11.2), Inches(1.0),
-            "Both Nokia and Ericsson are converging on AI-native telemetry architectures: "
-            "moving from centralized, rule-based monitoring to distributed, ML-driven systems "
-            "that can autonomously detect issues, predict failures, and initiate remediation. "
-            "The data mesh paradigm reflects the industry's recognition that telemetry data "
-            "management is as critical as the ML models themselves.",
+            "Ericsson's message is that good AI needs good data foundations. Better telemetry pipelines make automation and prediction much more realistic.",
             font_size=13, color=LIGHT_GRAY, line_spacing=1.4)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
@@ -800,35 +798,31 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_PURPLE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Emerging Trends: 6G & GenAI for Network Telemetry",
-                    "Next-generation technologies reshaping telemetry and network management",
+make_title_subtitle(slide, "Emerging Trends: 6G & GenAI",
+                    "Two trend groups that shape the future of telemetry",
                     "Hashim Kshim")
 
 trends = [
     ("6G & Next-Gen Telemetry", ACCENT_TEAL, [
-        "6G networks target sub-millisecond latency and Tbps throughput — demanding real-time ML inference at the edge",
-        "Digital twin networks: ML-powered virtual replicas of physical networks for simulation and what-if analysis",
-        "Semantic telemetry: intelligent data reduction at the source — only transmit meaningful changes, not raw streams",
-        "Native AI architecture: 6G standards embed ML as a first-class network function, not an add-on",
+        "6G will need even faster decisions and smarter automation",
+        "Digital twins can simulate a network before changes are made",
+        "Semantic telemetry tries to send only the most useful information",
+        "AI may become a built-in network function instead of an extra tool",
     ]),
     ("Generative AI & LLMs for Telemetry", ORANGE, [
-        "LLMs for natural language querying of telemetry data: 'Show me all anomalies in the US-East backbone last week'",
-        "GenAI for synthetic telemetry data generation — augmenting scarce labeled datasets for training",
-        "Automated incident report generation from raw telemetry events",
-        "Foundation models for network data: pre-trained on diverse telemetry, fine-tuned for specific tasks",
+        "LLMs may let engineers ask telemetry questions in plain language",
+        "GenAI can create synthetic data to help train models",
+        "It can also help summarize incidents and reports",
+        "Large foundation models may be adapted for different network tasks",
     ]),
 ]
 
-y = Inches(1.7)
-for title, color, bullets in trends:
-    add_textbox(slide, Inches(0.8), y, Inches(12), Inches(0.4),
-                title, font_size=20, color=color, bold=True)
-    y += Inches(0.5)
-    for b in bullets:
-        add_textbox(slide, Inches(1.1), y, Inches(11.5), Inches(0.4),
-                    f"• {b}", font_size=14, color=LIGHT_GRAY)
-        y += Inches(0.38)
-    y += Inches(0.3)
+add_card(slide, Inches(0.9), Inches(1.95), Inches(5.65), Inches(4.05),
+         trends[0][0], "\n".join(trends[0][2]),
+         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=13)
+add_card(slide, Inches(6.75), Inches(1.95), Inches(5.65), Inches(4.05),
+         trends[1][0], "\n".join(trends[1][2]),
+         title_color=ORANGE, border_color=ORANGE, body_size=13)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
 add_slide_number(slide, 16, TOTAL_SLIDES)
@@ -841,17 +835,17 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, color=ACCENT_PURPLE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Open Challenges & Future Directions",
-                    "Key issues that remain unsolved in ML for network telemetry",
+make_title_subtitle(slide, "Open Challenges",
+                    "Important problems that still need better solutions",
                     "Hashim Kshim")
 
 challenges = [
-    ("Data Scarcity & Labeling", "Labeled anomaly/fault data is rare in production networks. Self-supervised and few-shot learning are active research areas."),
-    ("Scalability & Real-Time Inference", "ML models must process millions of telemetry records per second. Edge inference and model compression are essential."),
-    ("Explainability & Trust", "Network operators need to understand why an ML model flagged an anomaly. Black-box models hinder adoption."),
-    ("Concept Drift", "Network traffic patterns change over time. Models must adapt continuously without catastrophic forgetting."),
-    ("Cross-Domain Generalization", "Models trained on one network often fail on another. Domain adaptation and transfer learning need further development."),
-    ("Privacy & Security", "Telemetry data may contain sensitive information. Federated and differential-privacy-preserving ML are emerging solutions."),
+    ("Not enough labeled data", "Real networks rarely provide clean examples of every failure or attack."),
+    ("Scale and speed", "Models must handle massive telemetry streams quickly enough to matter."),
+    ("Explainability", "Operators need to know why a model raised an alert before they trust it."),
+    ("Concept drift", "Normal traffic changes over time, so models can become outdated."),
+    ("Generalization", "A model that works well in one network may fail in another."),
+    ("Privacy and security", "Telemetry can contain sensitive information that must be protected."),
 ]
 
 for i, (title, desc) in enumerate(challenges):
@@ -882,23 +876,23 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide, left=0, top=0, width=SLIDE_WIDTH, height=Inches(0.1), color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_BLUE)
-make_title_subtitle(slide, "Conclusion & Key Takeaways", None, "Hashim Kshim")
+make_title_subtitle(slide, "Conclusion & Key Takeaways", "A cleaner final summary", "Hashim Kshim")
 
 takeaways = [
-    ("ML is transforming network telemetry",
-     "From passive data collection to intelligent, proactive network management across anomaly detection, performance prediction, and QoS optimization."),
-    ("Deep learning leads, but unsupervised methods dominate in practice",
-     "Due to the scarcity of labeled data, autoencoders, clustering, and self-supervised methods are most practical for real-world deployment."),
-    ("Industry is moving toward AI-native telemetry",
-     "Nokia and Ericsson are building telemetry platforms with embedded ML — autonomous, closed-loop, and data-mesh-driven architectures."),
-    ("6G and GenAI will accelerate the transformation",
-     "Next-generation networks will require ML as a native function, while LLMs promise to democratize telemetry analysis through natural language interfaces."),
-    ("Key challenges remain: scalability, explainability, and generalization",
-     "Real-world adoption requires solving data scarcity, concept drift, real-time inference, and cross-domain transfer."),
+    ("Telemetry gives the raw picture",
+     "It tells us what the network is doing right now through streams of measurements and events."),
+    ("ML helps turn data into decisions",
+     "It can find anomalies, predict future performance, and help improve QoS."),
+    ("Industry is already using these ideas",
+     "Companies such as Nokia and Ericsson are building more automated, ML-driven telemetry systems."),
+    ("The field is still growing",
+     "6G, digital twins, and generative AI may make telemetry smarter and easier to use."),
+    ("The hardest part is deployment",
+     "Real-world success still depends on trustworthy models, good data, and systems that scale."),
 ]
 
 for i, (title, desc) in enumerate(takeaways):
-    y = Inches(1.5) + Inches(i * 1.1)
+    y = Inches(1.45) + Inches(i * 1.08)
     # numbered circle
     circ = slide.shapes.add_shape(MSO_SHAPE.OVAL,
         Inches(0.75), y + Inches(0.02), Inches(0.42), Inches(0.42))
