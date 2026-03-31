@@ -1,3 +1,5 @@
 # References
 
-Full bibliography in references.md. All PDFs must be in papers/ and annotated.
+Full bibliography lives in `references.md`.
+
+Use this folder for the source list, and keep the actual PDFs in `papers/`.

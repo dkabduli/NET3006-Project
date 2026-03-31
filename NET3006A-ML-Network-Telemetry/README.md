@@ -1,4 +1,4 @@
-# NET3006A Project — ML for Network Telemetry
+# ML for Network Telemetry
 
 **Course:** NET3006A — Network Management and Machine Learning, Carleton University (Winter 2026)
 **Instructor:** Dr. Jie Gao
@@ -6,20 +6,29 @@
 **Topic:** Topic 2 – ML for Network Telemetry
 
 ## Team
-- Abdul Rehman — ML methods for anomaly detection
-- Esam Mukbil — ML for performance prediction & QoS
-- Hashim Kshim — Industry implementations & emerging trends (6G, GenAI)
+- Abdul Rehman — introduction, motivation, and network telemetry basics
+- Esam Mukbil — ML methods for anomaly detection and QoS optimization
+- Mazen Alhassan — key findings, performance prediction, telemetry pipeline, and Nokia example
+- Hashim Kshim — Ericsson example, emerging trends, open challenges, and conclusion
 
 ## Project Structure
-- `proposal/` — Submission proposal and generator script
-- `papers/` — All PDF references (must be annotated for submission)
-- `notes/` — Individual reading notes per team member
-- `synthesis/` — Shared synthesis documents
-- `presentation/` — Presentation outline and individual slide folders
-- `references/` — Full bibliography
+- `proposal/` — proposal generator and output files
+- `papers/` — PDF sources and annotated papers
+- `notes/` — member-specific reading notes
+- `synthesis/` — shared summaries, findings, and open challenges
+- `presentation/` — presentation deck, generator, outline, and presenter notes
+- `references/` — bibliography and source list
 
 ## Getting Started
 1. Run `node proposal/generate_proposal.js` to regenerate the proposal docx
 2. Add annotated PDFs to `papers/` as you find them
 3. Take notes in your folder under `notes/`
-4. Update `synthesis/key_findings.md` as a team after each sync
+4. Update `synthesis/key-findings.md` as a team after each sync
+
+## Helpful Files
+- `presentation/generate_presentation.py` — builds the PowerPoint deck
+- `presentation/presentation-outline.md` — speaking order and slide flow
+- `presentation/presenter-summary-plain-language.txt` — simple-language presenter notes
+- `synthesis/key-findings.md` — shared research takeaways
+- `synthesis/ml-methods-summary.md` — quick method comparison table
+- `synthesis/open-challenges.md` — open issues and future directions

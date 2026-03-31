@@ -1,3 +1,9 @@
 # Reading Notes
 
-Each team member maintains one notes file per paper or sub-topic in their folder.
+Each team member keeps notes for their section in their own folder.
+
+## Team Note Areas
+- `abdul/` — anomaly detection
+- `esam/` — anomaly methods and QoS
+- `mazen/` — performance prediction, telemetry pipeline, and Nokia
+- `hashim/` — Ericsson, future trends, challenges, and conclusion

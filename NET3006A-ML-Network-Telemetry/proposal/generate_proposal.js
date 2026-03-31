@@ -150,6 +150,12 @@ const doc = new Document({
           ],
           bullet: { level: 0 },
         }),
+        new Paragraph({
+          children: [
+            new TextRun({ text: 'Mazen Alhassan', font: FONT, size: BODY_SIZE }),
+          ],
+          bullet: { level: 0 },
+        }),
         new Paragraph({ text: '', spacing: { after: 150 } }),
         new Paragraph({
           children: [
@@ -220,19 +226,25 @@ const doc = new Document({
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Abdul Rehman: ML methods for anomaly detection in telemetry; submission logistics', font: FONT, size: BODY_SIZE }),
+            new TextRun({ text: 'Abdul Rehman: introduction, motivation, and network telemetry basics', font: FONT, size: BODY_SIZE }),
           ],
           bullet: { level: 0 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Esam Mukbil: ML for performance prediction and QoS optimization', font: FONT, size: BODY_SIZE }),
+            new TextRun({ text: 'Esam Mukbil: ML methods for anomaly detection and QoS optimization', font: FONT, size: BODY_SIZE }),
           ],
           bullet: { level: 0 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Hashim Kshim: Industry implementations (Nokia, Ericsson) and emerging trends (6G, GenAI for telemetry)', font: FONT, size: BODY_SIZE }),
+            new TextRun({ text: 'Mazen Alhassan: anomaly detection findings, performance prediction, telemetry pipeline, and Nokia example', font: FONT, size: BODY_SIZE }),
+          ],
+          bullet: { level: 0 },
+        }),
+        new Paragraph({
+          children: [
+            new TextRun({ text: 'Hashim Kshim: Ericsson example, emerging trends, open challenges, and conclusion', font: FONT, size: BODY_SIZE }),
           ],
           bullet: { level: 0 },
         }),

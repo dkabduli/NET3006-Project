@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate NET3006A Project Presentation — ML for Network Telemetry
-Team: Abdul Rehman, Esam Mukbil, Hashim Kshim
+Team: Abdul Rehman, Esam Mukbil, Hashim Kshim, Mazen Alhassan
 """
 
 from pptx import Presentation
@@ -16,6 +16,7 @@ DARK_BG       = RGBColor(0x1B, 0x1F, 0x3B)   # deep navy
 ACCENT_BLUE   = RGBColor(0x00, 0x9F, 0xFD)   # bright cyan-blue
 ACCENT_TEAL   = RGBColor(0x00, 0xC9, 0xA7)   # teal green
 ACCENT_PURPLE = RGBColor(0x84, 0x5E, 0xC2)   # soft purple
+ACCENT_GOLD   = RGBColor(0xF0, 0xB4, 0x29)   # warm gold
 WHITE         = RGBColor(0xFF, 0xFF, 0xFF)
 LIGHT_GRAY    = RGBColor(0xCC, 0xCC, 0xCC)
 MID_GRAY      = RGBColor(0x99, 0x99, 0x99)
@@ -105,6 +106,15 @@ def add_icon_circle(slide, left, top, size, text, fill_color, font_size=20):
     return circ
 
 
+def add_image(slide, image_path, left, top, width=None, height=None):
+    kwargs = {}
+    if width is not None:
+        kwargs["width"] = width
+    if height is not None:
+        kwargs["height"] = height
+    return slide.shapes.add_picture(image_path, left, top, **kwargs)
+
+
 def add_bullet_slide_content(tf, bullets, font_size=18, color=WHITE, bold=False,
                               indent_level=0, font_name='Calibri', spacing=6):
     for i, bullet in enumerate(bullets):
@@ -159,7 +169,17 @@ def make_title_subtitle(slide, title, subtitle, presenter,
     add_presenter_tag(slide, presenter)
 
 
-TOTAL_SLIDES = 20
+TOTAL_SLIDES = 23
+ASSET_DIR = os.path.join(
+    os.path.expanduser("~"),
+    ".cursor",
+    "projects",
+    "Users-ykabduli-Downloads-Third-Year-Second-Semester-NET3006-NET3006-Project",
+    "assets",
+)
+TITLE_VISUAL = os.path.join(ASSET_DIR, "telemetry_title_visual.png")
+PIPELINE_VISUAL = os.path.join(ASSET_DIR, "telemetry_pipeline_visual_clean.png")
+FUTURE_VISUAL = os.path.join(ASSET_DIR, "future_6g_genai_visual_clean.png")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -167,8 +187,16 @@ TOTAL_SLIDES = 20
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank
 add_bg(slide)
+if os.path.exists(TITLE_VISUAL):
+    add_image(slide, TITLE_VISUAL, 0, Inches(0.95), width=SLIDE_WIDTH)
 add_accent_bar(slide, left=0, top=0, width=SLIDE_WIDTH, height=Inches(0.1), color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
+
+title_panel = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(0.85), Inches(11.35), Inches(5.45))
+title_panel.fill.solid()
+title_panel.fill.fore_color.rgb = RGBColor(0x0E, 0x13, 0x2A)
+title_panel.fill.transparency = 0.22
+title_panel.line.fill.background()
 
 add_textbox(slide, Inches(1.5), Inches(1.2), Inches(10.3), Inches(1.2),
             "Machine Learning for Network Telemetry",
@@ -192,8 +220,8 @@ add_textbox(slide, Inches(1.5), Inches(4.3), Inches(10.3), Inches(0.5),
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
 add_textbox(slide, Inches(1.5), Inches(5.3), Inches(10.3), Inches(0.5),
-            "Abdul Rehman    |    Esam Mukbil    |    Hashim Kshim",
-            font_size=20, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
+            "Abdul Rehman  |  Esam Mukbil  |  Hashim Kshim  |  Mazen Alhassan",
+            font_size=18, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 add_textbox(slide, Inches(1.5), Inches(5.85), Inches(10.3), Inches(0.4),
             "Option 1: Survey / Reading Project  —  Topic 2",
             font_size=14, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
@@ -220,19 +248,19 @@ slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
 add_accent_bar(slide)
 add_bottom_bar(slide, color=ACCENT_TEAL)
-make_title_subtitle(slide, "Presentation Outline", None, "Abdul Rehman")
+make_title_subtitle(slide, "Presentation Outline", None, "All Members")
 
 items = [
     ("1.", "Introduction & Motivation", "Abdul Rehman"),
     ("2.", "What Network Telemetry Means", "Abdul Rehman"),
-    ("3.", "Why Machine Learning Helps", "Abdul Rehman"),
-    ("4.", "Anomaly Detection Methods", "Abdul Rehman"),
-    ("5.", "Main Lessons from Anomaly Detection", "Abdul Rehman"),
-    ("6.", "Performance Prediction", "Esam Mukbil"),
-    ("7.", "QoS Optimization", "Esam Mukbil"),
-    ("8.", "Main Lessons for Performance & QoS", "Esam Mukbil"),
-    ("9.", "Telemetry Pipeline", "Esam Mukbil"),
-    ("10.", "Nokia Example", "Hashim Kshim"),
+    ("3.", "Why Machine Learning Helps", "Esam Mukbil"),
+    ("4.", "Anomaly Detection Methods", "Esam Mukbil"),
+    ("5.", "Main Lessons from Anomaly Detection", "Mazen Alhassan"),
+    ("6.", "Performance Prediction", "Mazen Alhassan"),
+    ("7.", "QoS Optimization", "Hashim Kshim"),
+    ("8.", "Main Lessons for Performance & QoS", "Hashim Kshim"),
+    ("9.", "Telemetry Pipeline", "Mazen Alhassan"),
+    ("10.", "Nokia Example", "Mazen Alhassan"),
     ("11.", "Ericsson Example", "Hashim Kshim"),
     ("12.", "Future Trends: 6G & GenAI", "Hashim Kshim"),
     ("13.", "Open Challenges", "Hashim Kshim"),
@@ -242,7 +270,7 @@ items = [
 start_y = Inches(1.6)
 for i, (num, title, presenter) in enumerate(items):
     y = start_y + Inches(i * 0.38)
-    c = ACCENT_BLUE if "Abdul" in presenter else (ACCENT_TEAL if "Esam" in presenter else ACCENT_PURPLE)
+    c = ACCENT_BLUE if "Abdul" in presenter else (ACCENT_TEAL if "Esam" in presenter else (ACCENT_GOLD if "Mazen" in presenter else ACCENT_PURPLE))
     add_textbox(slide, Inches(1.2), y, Inches(0.6), Inches(0.35),
                 num, font_size=14, color=c, bold=True)
     add_textbox(slide, Inches(1.8), y, Inches(6), Inches(0.35),
@@ -252,15 +280,15 @@ for i, (num, title, presenter) in enumerate(items):
 
 # legend
 for j, (name, clr) in enumerate([
-    ("Abdul Rehman", ACCENT_BLUE), ("Esam Mukbil", ACCENT_TEAL), ("Hashim Kshim", ACCENT_PURPLE)
+    ("Abdul Rehman", ACCENT_BLUE), ("Esam Mukbil", ACCENT_TEAL), ("Mazen Alhassan", ACCENT_GOLD), ("Hashim Kshim", ACCENT_PURPLE)
 ]):
     dot = slide.shapes.add_shape(MSO_SHAPE.OVAL,
-        Inches(1.2) + Inches(j * 3.5), Inches(7.05), Inches(0.15), Inches(0.15))
+        Inches(0.8) + Inches(j * 3.1), Inches(7.05), Inches(0.15), Inches(0.15))
     dot.fill.solid()
     dot.fill.fore_color.rgb = clr
     dot.line.fill.background()
-    add_textbox(slide, Inches(1.45) + Inches(j * 3.5), Inches(6.95),
-                Inches(2.5), Inches(0.35), name, font_size=11, color=clr)
+    add_textbox(slide, Inches(1.05) + Inches(j * 3.1), Inches(6.95),
+                Inches(2.3), Inches(0.35), name, font_size=10, color=clr)
 
 add_slide_number(slide, 2, TOTAL_SLIDES)
 
@@ -335,7 +363,107 @@ add_slide_number(slide, 4, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 5 — Why ML for Network Telemetry?
+# SLIDE 5 — Telemetry vs Traditional Monitoring
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_BLUE)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "From Traditional Monitoring to Streaming Telemetry",
+                    "Why modern networks moved beyond slow polling and basic dashboards",
+                    "Abdul Rehman")
+
+add_card(slide, Inches(0.9), Inches(1.9), Inches(5.6), Inches(3.25),
+         "Traditional Monitoring",
+         "Checks devices every so often\nOften slower and less detailed\nProblems may be noticed after users are affected\nWorks poorly at modern network scale",
+         title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=15)
+add_card(slide, Inches(6.85), Inches(1.9), Inches(5.6), Inches(3.25),
+         "Streaming Telemetry",
+         "Data is pushed continuously\nMore detailed and more real-time\nMakes faster detection and response possible\nBetter fit for ML and automation",
+         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=15)
+
+arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(5.95), Inches(3.05), Inches(0.55), Inches(0.3))
+arrow.fill.solid()
+arrow.fill.fore_color.rgb = MID_GRAY
+arrow.line.fill.background()
+
+add_card(slide, Inches(2.5), Inches(5.55), Inches(8.3), Inches(0.85),
+         "Main Point",
+         "Better telemetry gives ML better input, and better input leads to better decisions.",
+         title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=13)
+
+add_presenter_tag(slide, "Abdul Rehman")
+add_slide_number(slide, 5, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 6 — Where Telemetry Data Comes From
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_BLUE)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Where Telemetry Data Comes From",
+                    "Different network signals combine to give a full picture",
+                    "Abdul Rehman")
+
+sources = [
+    ("Devices", "Routers, switches, and access points report health and counters.", ACCENT_BLUE),
+    ("Traffic Flows", "Flow records show who is talking, how much, and how often.", ACCENT_TEAL),
+    ("Packets", "Packet traces reveal detailed behavior on the wire.", ACCENT_PURPLE),
+    ("Logs & Events", "Logs capture warnings, failures, and configuration changes.", ORANGE),
+]
+for i, (title, body, color) in enumerate(sources):
+    x = Inches(0.9) + Inches((i % 2) * 6.0)
+    y = Inches(1.9) + Inches((i // 2) * 2.0)
+    add_card(slide, x, y, Inches(5.35), Inches(1.45), title, body,
+             title_color=color, border_color=color, body_size=13)
+
+add_card(slide, Inches(2.0), Inches(5.85), Inches(9.3), Inches(0.75),
+         "Why this matters",
+         "ML works best when it can learn from multiple types of telemetry instead of a single signal.",
+         title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=12)
+
+add_presenter_tag(slide, "Abdul Rehman")
+add_slide_number(slide, 6, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 7 — Why Telemetry Matters
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_BLUE)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Why Telemetry Matters in Modern Networks",
+                    "Telemetry supports visibility, reliability, and automation",
+                    "Abdul Rehman")
+
+benefits = [
+    ("See problems earlier", "Operators can notice trouble before outages spread."),
+    ("Understand performance", "Teams can measure delay, loss, and congestion more clearly."),
+    ("Support automation", "Telemetry gives ML the evidence it needs to recommend actions."),
+    ("Scale to new networks", "5G, cloud, and large systems need better visibility than old tools provide."),
+]
+for i, (title, body) in enumerate(benefits):
+    y = Inches(1.8) + Inches(i * 1.05)
+    add_icon_circle(slide, Inches(0.95), y + Inches(0.02), Inches(0.42), str(i + 1), ACCENT_BLUE, font_size=16)
+    add_textbox(slide, Inches(1.55), y, Inches(4.2), Inches(0.35),
+                title, font_size=18, color=ACCENT_BLUE, bold=True)
+    add_textbox(slide, Inches(1.55), y + Inches(0.38), Inches(10.8), Inches(0.42),
+                body, font_size=14, color=LIGHT_GRAY)
+
+add_card(slide, Inches(7.8), Inches(2.15), Inches(4.6), Inches(2.7),
+         "Simple Summary",
+         "Telemetry is the network's evidence.\nML uses that evidence to find patterns, explain behavior, and support faster decisions.",
+         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=15)
+
+add_presenter_tag(slide, "Abdul Rehman")
+add_slide_number(slide, 7, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 8 — Why ML for Network Telemetry?
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -343,7 +471,7 @@ add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "Why Apply ML to Network Telemetry?",
                     "The challenge is not collecting data. It is understanding it fast enough.",
-                    "Abdul Rehman")
+                    "Esam Mukbil")
 
 challenges = [
     ("Too much data", "Large networks create huge streams of measurements every second."),
@@ -374,12 +502,12 @@ add_card(
     title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=13
 )
 
-add_presenter_tag(slide, "Abdul Rehman")
-add_slide_number(slide, 5, TOTAL_SLIDES)
+add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
+add_slide_number(slide, 8, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 6 — ML Methods for Anomaly Detection
+# SLIDE 9 — ML Methods for Anomaly Detection
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -387,7 +515,7 @@ add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML Methods for Anomaly Detection",
                     "A visual summary of the main model families",
-                    "Abdul Rehman")
+                    "Esam Mukbil")
 
 methods = [
     ("Autoencoders", "Unsupervised", "Learn what normal traffic looks like. If new data looks very different, it may be an anomaly."),
@@ -414,12 +542,12 @@ for i, (method, category, desc) in enumerate(methods):
     add_textbox(slide, x + Inches(1.95), y - Inches(0.16), Inches(0.92), Inches(0.24),
                 category, font_size=8, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 
-add_presenter_tag(slide, "Abdul Rehman")
-add_slide_number(slide, 6, TOTAL_SLIDES)
+add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
+add_slide_number(slide, 9, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 7 — Anomaly Detection: Key Findings
+# SLIDE 10 — Anomaly Detection: Key Findings
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -427,7 +555,7 @@ add_accent_bar(slide, color=ACCENT_BLUE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "Anomaly Detection: Main Lessons",
                     "Less text, stronger takeaways",
-                    "Abdul Rehman")
+                    "Mazen Alhassan")
 
 findings = [
     "Deep learning often beats older statistical methods when telemetry has many features.",
@@ -454,12 +582,12 @@ add_card(
     title_color=ACCENT_BLUE, border_color=ACCENT_BLUE, body_size=12
 )
 
-add_presenter_tag(slide, "Abdul Rehman")
-add_slide_number(slide, 7, TOTAL_SLIDES)
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 10, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 8 — Section Divider: Esam Mukbil
+# SLIDE 11 — Section Divider: Esam Mukbil & Mazen Alhassan
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -468,15 +596,15 @@ add_bottom_bar(slide, color=ACCENT_TEAL)
 add_textbox(slide, Inches(1), Inches(1.5), Inches(11), Inches(0.5),
             "PART 2", font_size=16, color=ACCENT_TEAL, bold=True,
             alignment=PP_ALIGN.CENTER)
-add_section_header(slide, "ML for Performance Prediction & QoS", ACCENT_TEAL)
+add_section_header(slide, "Methods, Findings & Prediction", ACCENT_TEAL)
 add_textbox(slide, Inches(1), Inches(5.0), Inches(11), Inches(0.5),
-            "Presenter: Esam Mukbil", font_size=20, color=WHITE,
+            "Presenters: Esam Mukbil & Mazen Alhassan", font_size=20, color=WHITE,
             alignment=PP_ALIGN.CENTER)
-add_slide_number(slide, 8, TOTAL_SLIDES)
+add_slide_number(slide, 11, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 9 — ML for Performance Prediction
+# SLIDE 12 — ML for Performance Prediction
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -484,7 +612,7 @@ add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML for Network Performance Prediction",
                     "Using telemetry to estimate what the network will do next",
-                    "Esam Mukbil")
+                    "Mazen Alhassan")
 
 items_left = [
     ("Time-Series Forecasting", [
@@ -535,12 +663,12 @@ for title, bullets in items_right:
         y_pos += Inches(0.35)
     y_pos += Inches(0.2)
 
-add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
-add_slide_number(slide, 9, TOTAL_SLIDES)
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 12, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 10 — ML for QoS Optimization
+# SLIDE 13 — ML for QoS Optimization
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -571,11 +699,11 @@ for i, (method, desc) in enumerate(qos_methods):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
-add_slide_number(slide, 10, TOTAL_SLIDES)
+add_slide_number(slide, 13, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 11 — Performance & QoS Key Findings
+# SLIDE 14 — Performance & QoS Key Findings
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -611,11 +739,11 @@ for i, (title, desc) in enumerate(findings):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
-add_slide_number(slide, 11, TOTAL_SLIDES)
+add_slide_number(slide, 14, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 12 — Telemetry Pipeline Architecture
+# SLIDE 15 — Telemetry Pipeline Architecture
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -623,72 +751,50 @@ add_accent_bar(slide, color=ACCENT_TEAL)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "ML-Enhanced Network Telemetry Pipeline",
                     "A cleaner flow from data to action",
-                    "Esam Mukbil")
+                    "Mazen Alhassan")
+
+if os.path.exists(PIPELINE_VISUAL):
+    add_image(slide, PIPELINE_VISUAL, Inches(0.7), Inches(1.6), width=Inches(11.95))
 
 stages = [
-    ("1. Collect", "gNMI, gRPC,\nINT, NetFlow", ACCENT_BLUE),
-    ("2. Move", "Streaming tools\nKafka, Flink", RGBColor(0x00, 0xB4, 0xD8)),
-    ("3. Store", "Time-series DB\nData lakes", ACCENT_TEAL),
-    ("4. Analyze", "Detection,\nprediction, RL", ACCENT_PURPLE),
-    ("5. Act", "Alerts,\npolicy changes", ORANGE),
+    ("Collect", "Devices export live network data", ACCENT_BLUE),
+    ("Store", "Platforms organize and retain telemetry", ACCENT_TEAL),
+    ("Analyze", "ML models detect patterns and predict issues", ACCENT_PURPLE),
+    ("Act", "Operators or automation respond faster", ORANGE),
 ]
-
-box_width = Inches(2.15)
-gap = Inches(0.18)
-start_x = Inches(0.8)
-box_y = Inches(2.3)
-box_h = Inches(2.0)
-
 for i, (title, desc, color) in enumerate(stages):
-    x = start_x + (box_width + gap) * i
-    box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, box_y, box_width, box_h)
-    box.fill.solid()
-    box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
-    box.line.color.rgb = color
-    box.line.width = Pt(2)
-    add_icon_circle(slide, x + Inches(0.72), box_y + Inches(0.18), Inches(0.7), str(i + 1), color, font_size=18)
-    add_textbox(slide, x + Inches(0.12), box_y + Inches(0.95), box_width - Inches(0.24), Inches(0.32),
-                title, font_size=14, color=color, bold=True, alignment=PP_ALIGN.CENTER)
-    add_textbox(slide, x + Inches(0.12), box_y + Inches(1.26), box_width - Inches(0.24), Inches(0.52),
-                desc, font_size=12, color=LIGHT_GRAY, alignment=PP_ALIGN.CENTER)
-    # arrow between boxes
-    if i < len(stages) - 1:
-        arrow_x = x + box_width
-        arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW,
-            arrow_x, box_y + Inches(0.85), gap, Inches(0.3))
-        arrow.fill.solid()
-        arrow.fill.fore_color.rgb = MID_GRAY
-        arrow.line.fill.background()
+    x = Inches(0.8) + Inches(i * 3.05)
+    add_card(slide, x, Inches(5.0), Inches(2.7), Inches(1.15), title, desc,
+             title_color=color, border_color=color, body_size=11)
 
 # bottom note
-add_textbox(slide, Inches(0.8), Inches(4.8), Inches(11.5), Inches(1.5),
-            "The big idea is simple: collect data, analyze it with ML, then use the result to help the network respond faster. "
-            "That is what turns monitoring into intelligent network management.",
-            font_size=14, color=LIGHT_GRAY, line_spacing=1.4)
+add_textbox(slide, Inches(0.9), Inches(6.35), Inches(11.4), Inches(0.45),
+            "The pipeline matters because good telemetry architecture makes reliable ML and faster response possible.",
+            font_size=13, color=LIGHT_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_presenter_tag(slide, "Esam Mukbil", ACCENT_TEAL)
-add_slide_number(slide, 12, TOTAL_SLIDES)
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 15, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 13 — Section Divider: Hashim Kshim
+# SLIDE 16 — Section Divider: Mazen Alhassan & Hashim Kshim
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
 add_bottom_bar(slide, color=ACCENT_PURPLE)
 
 add_textbox(slide, Inches(1), Inches(1.5), Inches(11), Inches(0.5),
-            "PART 3", font_size=16, color=ACCENT_PURPLE, bold=True,
+            "PART 3", font_size=16, color=ACCENT_GOLD, bold=True,
             alignment=PP_ALIGN.CENTER)
-add_section_header(slide, "Industry, Emerging Trends & Conclusion", ACCENT_PURPLE)
+add_section_header(slide, "Pipeline, Industry & Conclusion", ACCENT_GOLD)
 add_textbox(slide, Inches(1), Inches(5.0), Inches(11), Inches(0.5),
-            "Presenter: Hashim Kshim", font_size=20, color=WHITE,
+            "Presenters: Mazen Alhassan & Hashim Kshim", font_size=20, color=WHITE,
             alignment=PP_ALIGN.CENTER)
-add_slide_number(slide, 13, TOTAL_SLIDES)
+add_slide_number(slide, 16, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 14 — Nokia's Telemetry Solutions
+# SLIDE 17 — Nokia's Telemetry Solutions
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -696,11 +802,11 @@ add_accent_bar(slide, color=ACCENT_PURPLE)
 add_bottom_bar(slide, color=ACCENT_TEAL)
 make_title_subtitle(slide, "Industry Example: Nokia",
                     "Showing what ML-driven telemetry looks like in practice",
-                    "Hashim Kshim")
+                    "Mazen Alhassan")
 
 add_card(slide, Inches(0.85), Inches(1.9), Inches(3.8), Inches(1.6),
          "Collect", "Gather live broadband telemetry from many devices.",
-         title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE)
+         title_color=ACCENT_GOLD, border_color=ACCENT_GOLD)
 add_card(slide, Inches(4.75), Inches(1.9), Inches(3.8), Inches(1.6),
          "Analyze", "Use ML to detect anomalies and estimate risk.",
          title_color=ACCENT_TEAL, border_color=ACCENT_TEAL)
@@ -718,15 +824,15 @@ add_card(
     slide, Inches(1.45), Inches(4.15), Inches(10.4), Inches(1.7),
     "What Nokia Is Trying To Do",
     "Predict failures early  |  find unusual behavior automatically  |  estimate customer experience  |  forecast capacity needs  |  speed up troubleshooting",
-    title_color=ACCENT_PURPLE, border_color=ACCENT_PURPLE, body_size=14
+    title_color=ACCENT_GOLD, border_color=ACCENT_GOLD, body_size=14
 )
 
-add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 14, TOTAL_SLIDES)
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 17, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 15 — Ericsson's AI-Driven Telemetry
+# SLIDE 18 — Ericsson's AI-Driven Telemetry
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -788,11 +894,11 @@ add_textbox(slide, Inches(1.1), Inches(5.05), Inches(11.2), Inches(1.0),
             font_size=13, color=LIGHT_GRAY, line_spacing=1.4)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 15, TOTAL_SLIDES)
+add_slide_number(slide, 18, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 16 — Emerging Trends: 6G & GenAI
+# SLIDE 19 — Emerging Trends: 6G & GenAI
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -817,19 +923,21 @@ trends = [
     ]),
 ]
 
-add_card(slide, Inches(0.9), Inches(1.95), Inches(5.65), Inches(4.05),
-         trends[0][0], "\n".join(trends[0][2]),
-         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=13)
-add_card(slide, Inches(6.75), Inches(1.95), Inches(5.65), Inches(4.05),
-         trends[1][0], "\n".join(trends[1][2]),
-         title_color=ORANGE, border_color=ORANGE, body_size=13)
+if os.path.exists(FUTURE_VISUAL):
+    add_image(slide, FUTURE_VISUAL, Inches(0.7), Inches(1.55), width=Inches(11.9))
+add_card(slide, Inches(0.9), Inches(5.25), Inches(5.65), Inches(1.3),
+         trends[0][0], "Edge intelligence, digital twins, semantic telemetry, and AI-native design.",
+         title_color=ACCENT_TEAL, border_color=ACCENT_TEAL, body_size=12)
+add_card(slide, Inches(6.75), Inches(5.25), Inches(5.65), Inches(1.3),
+         trends[1][0], "Natural-language analytics, synthetic data, incident summaries, and foundation models.",
+         title_color=ORANGE, border_color=ORANGE, body_size=12)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 16, TOTAL_SLIDES)
+add_slide_number(slide, 19, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 17 — Open Challenges
+# SLIDE 20 — Open Challenges
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -866,11 +974,11 @@ for i, (title, desc) in enumerate(challenges):
                 desc, font_size=12, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 17, TOTAL_SLIDES)
+add_slide_number(slide, 20, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 18 — Conclusion & Key Takeaways
+# SLIDE 21 — Conclusion & Key Takeaways
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -908,11 +1016,11 @@ for i, (title, desc) in enumerate(takeaways):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 18, TOTAL_SLIDES)
+add_slide_number(slide, 21, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 19 — Thank You & Q&A
+# SLIDE 22 — Thank You & Q&A
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -934,17 +1042,17 @@ shape.fill.fore_color.rgb = ACCENT_BLUE
 shape.line.fill.background()
 
 add_textbox(slide, Inches(1.5), Inches(4.5), Inches(10.3), Inches(0.5),
-            "Abdul Rehman    |    Esam Mukbil    |    Hashim Kshim",
-            font_size=20, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
+            "Abdul Rehman  |  Esam Mukbil  |  Hashim Kshim  |  Mazen Alhassan",
+            font_size=18, color=WHITE, bold=True, alignment=PP_ALIGN.CENTER)
 add_textbox(slide, Inches(1.5), Inches(5.2), Inches(10.3), Inches(0.5),
             "NET3006A — Machine Learning for Network Telemetry",
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_slide_number(slide, 19, TOTAL_SLIDES)
+add_slide_number(slide, 22, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 20 — References
+# SLIDE 23 — References
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -983,7 +1091,7 @@ for i, ref in enumerate(references):
     p.space_after = Pt(4)
     p.space_before = Pt(1)
 
-add_slide_number(slide, 20, TOTAL_SLIDES)
+add_slide_number(slide, 23, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════

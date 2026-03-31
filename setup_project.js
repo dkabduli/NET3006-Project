@@ -49,9 +49,10 @@ const FILES = {
 **Topic:** Topic 2 – ML for Network Telemetry
 
 ## Team
-- Abdul Rehman — ML methods for anomaly detection
-- Esam Mukbil — ML for performance prediction & QoS
-- Hashim Kshim — Industry implementations & emerging trends (6G, GenAI)
+- Abdul Rehman — introduction, motivation, and network telemetry basics
+- Esam Mukbil — ML methods for anomaly detection and QoS optimization
+- Mazen Alhassan — key findings, performance prediction, telemetry pipeline, and Nokia example
+- Hashim Kshim — Ericsson example, emerging trends, open challenges, and conclusion
 
 ## Project Structure
 - \`proposal/\` — Submission proposal and generator script
@@ -65,7 +66,7 @@ const FILES = {
 1. Run \`node proposal/generate_proposal.js\` to regenerate the proposal docx
 2. Add annotated PDFs to \`papers/\` as you find them
 3. Take notes in your folder under \`notes/\`
-4. Update \`synthesis/key_findings.md\` as a team after each sync
+4. Update \`synthesis/key-findings.md\` as a team after each sync
 `,
 
   'proposal/generate_proposal.js': getGenerateProposalContent(),
@@ -133,12 +134,31 @@ Each team member maintains one notes file per paper or sub-topic in their folder
 - **Key Takeaway:**
 `,
 
+  'notes/mazen/performance_pipeline_industry_notes.md': `# Performance Prediction, Telemetry Pipeline & Nokia — Reading Notes
+**Owner:** Mazen Alhassan
+
+## Sources to Read
+- [ ] Papers on network performance prediction
+- [ ] Papers on telemetry-driven forecasting
+- [ ] Sources on telemetry pipeline architecture
+- [ ] Nokia sources related to ML-driven telemetry
+
+## Notes Template
+
+### Source: [Title]
+- **Publisher / Venue:**
+- **Key ML Method:**
+- **Telemetry Use Case:**
+- **Key Finding:**
+- **Limitations:**
+`,
+
   'synthesis/README.md': `# Synthesis Documents
 
 Shared team synthesis. Update collaboratively after each sync.
 `,
 
-  'synthesis/key_findings.md': `# Key Findings — ML for Network Telemetry
+  'synthesis/key-findings.md': `# Key Findings — ML for Network Telemetry
 
 > Updated collaboratively after each team sync.
 
@@ -156,14 +176,14 @@ Shared team synthesis. Update collaboratively after each sync.
 ## Gaps in the Literature
 `,
 
-  'synthesis/ml_methods_summary.md': `# ML Methods Summary
+  'synthesis/ml-methods-summary.md': `# ML Methods Summary
 
 | ML Method | Category | Papers Using It | Telemetry Task | Performance Noted |
 |-----------|----------|----------------|----------------|------------------|
 | | | | | |
 `,
 
-  'synthesis/open_challenges.md': `# Open Challenges & Future Directions
+  'synthesis/open-challenges.md': `# Open Challenges & Future Directions
 
 ## Identified Challenges
 1.
@@ -179,7 +199,7 @@ Shared team synthesis. Update collaboratively after each sync.
 Slides and outline for the final presentation.
 `,
 
-  'presentation/outline.md': `# Presentation Outline
+  'presentation/presentation-outline.md': `# Presentation Outline
 **Duration:** 15 minutes presentation + 5 minutes Q&A
 **Rule:** Each presenter's name must appear on every slide they present.
 **Rule:** Each presenter must create their own slides without help from others.
@@ -343,6 +363,7 @@ const doc = new Document({
       new Paragraph({ children: [new TextRun({ text: 'Abdul Rehman', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
       new Paragraph({ children: [new TextRun({ text: 'Esam Mukbil', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
       new Paragraph({ children: [new TextRun({ text: 'Hashim Kshim', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
+      new Paragraph({ children: [new TextRun({ text: 'Mazen Alhassan', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
       new Paragraph({ text: '', spacing: { after: 150 } }),
       new Paragraph({ children: [new TextRun({ text: '2. Project Option', font: FONT, size: HEADER_SIZE, bold: true })] }),
       new Paragraph({ children: [new TextRun({ text: 'Option 1: Survey / Reading Project', font: FONT, size: BODY_SIZE })] }),
@@ -359,9 +380,10 @@ const doc = new Document({
       createTable(),
       new Paragraph({ text: '', spacing: { after: 150 } }),
       new Paragraph({ children: [new TextRun({ text: 'Task Division Summary:', font: FONT, size: BODY_SIZE, bold: true })] }),
-      new Paragraph({ children: [new TextRun({ text: 'Abdul Rehman: ML methods for anomaly detection in telemetry; submission logistics', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
-      new Paragraph({ children: [new TextRun({ text: 'Esam Mukbil: ML for performance prediction and QoS optimization', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
-      new Paragraph({ children: [new TextRun({ text: 'Hashim Kshim: Industry implementations (Nokia, Ericsson) and emerging trends (6G, GenAI for telemetry)', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
+      new Paragraph({ children: [new TextRun({ text: 'Abdul Rehman: introduction, motivation, and network telemetry basics', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
+      new Paragraph({ children: [new TextRun({ text: 'Esam Mukbil: ML methods for anomaly detection and QoS optimization', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
+      new Paragraph({ children: [new TextRun({ text: 'Mazen Alhassan: anomaly detection findings, performance prediction, telemetry pipeline, and Nokia example', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
+      new Paragraph({ children: [new TextRun({ text: 'Hashim Kshim: Ericsson example, emerging trends, open challenges, and conclusion', font: FONT, size: BODY_SIZE })], bullet: { level: 0 } }),
     ],
   }],
 });
