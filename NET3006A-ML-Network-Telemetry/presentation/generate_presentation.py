@@ -175,7 +175,7 @@ def make_title_subtitle(slide, title, subtitle, presenter,
     add_presenter_tag(slide, presenter)
 
 
-TOTAL_SLIDES = 25
+TOTAL_SLIDES = 26
 ASSET_DIR = os.path.join(
     os.path.expanduser("~"),
     ".cursor",
@@ -1041,7 +1041,105 @@ add_slide_number(slide, 19, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 20 — Ericsson's AI-Driven Telemetry
+# SLIDE 20 — Case Study: GNN for QoS Performance Prediction (Mazen)
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_GOLD)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Case Study: Predicting QoS with Graph Neural Networks",
+                    None, "Mazen Alhassan")
+
+# ── Section 1: The Problem ──
+add_textbox(slide, Inches(0.8), Inches(1.35), Inches(5.8), Inches(0.35),
+            "The Problem", font_size=18, color=ACCENT_BLUE, bold=True)
+
+prob_box3 = slide.shapes.add_textbox(Inches(0.8), Inches(1.75), Inches(5.8), Inches(1.8))
+tf_prob3 = prob_box3.text_frame
+tf_prob3.word_wrap = True
+prob_bullets3 = [
+    "Operators need to know QoS metrics (delay, jitter, packet loss) for every flow path in their network",
+    "Traditionally requires expensive packet-level simulators (OMNeT++) that take a long time, or constant active probing that wastes bandwidth",
+    "What if ML could instantly predict QoS metrics just by looking at topology, routing, and traffic load?",
+]
+add_bullet_slide_content(tf_prob3, [f"\u2022 {b}" for b in prob_bullets3], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Section 2: The Study ──
+add_textbox(slide, Inches(0.8), Inches(3.55), Inches(5.8), Inches(0.35),
+            "The Study: RouteNet-Fermi (Ferriol-Galmés et al., 2023)", font_size=17, color=ACCENT_TEAL, bold=True)
+
+study_box3 = slide.shapes.add_textbox(Inches(0.8), Inches(3.95), Inches(5.8), Inches(2.4))
+tf_study3 = study_box3.text_frame
+tf_study3.word_wrap = True
+study_bullets3 = [
+    "Uses a Graph Neural Network (GNN) \u2014 designed for graph-structured data (perfect for networks)",
+    "Three-stage message-passing algorithm between flows, queues, and links \u2014 learns how they interact to affect performance",
+    "Input: topology + routing + traffic parameters. Output: per-flow delay, jitter, packet loss",
+    "Key strength: generalizes to unseen networks \u2014 train on small networks (14-50 nodes), predict accurately on networks up to 300 nodes",
+]
+add_bullet_slide_content(tf_study3, [f"\u2022 {b}" for b in study_bullets3], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Right side: GNN flow diagram ──
+add_textbox(slide, Inches(7.2), Inches(1.35), Inches(5.5), Inches(0.35),
+            "How RouteNet-Fermi Works", font_size=18, color=ACCENT_PURPLE, bold=True,
+            alignment=PP_ALIGN.CENTER)
+
+gnn_steps = [
+    ("Network\nGraph", ACCENT_BLUE),
+    ("GNN Message\nPassing", ACCENT_TEAL),
+    ("Flows \u2194\nQueues \u2194 Links", ACCENT_PURPLE),
+    ("QoS\nPredictions", ACCENT_GOLD),
+]
+
+g_w = Inches(2.4)
+g_h = Inches(0.85)
+g_x = Inches(7.2)
+for i, (label, color) in enumerate(gnn_steps):
+    row = i // 2
+    col = i % 2
+    x = g_x + col * Inches(2.6)
+    y = Inches(1.9) + row * Inches(1.35)
+    box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, g_w, g_h)
+    box.fill.solid()
+    box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
+    box.line.color.rgb = color
+    box.line.width = Pt(1.5)
+    add_textbox(slide, x, y + Inches(0.12), g_w, g_h - Inches(0.15),
+                label, font_size=12, color=color, bold=True, alignment=PP_ALIGN.CENTER)
+    if col == 0 and i < len(gnn_steps) - 1:
+        arrow_gnn = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW,
+            x + g_w, y + Inches(0.28), Inches(0.2), Inches(0.2))
+        arrow_gnn.fill.solid()
+        arrow_gnn.fill.fore_color.rgb = MID_GRAY
+        arrow_gnn.line.fill.background()
+
+d_arrow_gnn = slide.shapes.add_shape(MSO_SHAPE.DOWN_ARROW,
+    g_x + Inches(1.2), Inches(2.75), Inches(0.2), Inches(0.4))
+d_arrow_gnn.fill.solid()
+d_arrow_gnn.fill.fore_color.rgb = MID_GRAY
+d_arrow_gnn.line.fill.background()
+
+# ── Right side bottom: Results ──
+add_textbox(slide, Inches(7.2), Inches(3.55), Inches(5.5), Inches(0.35),
+            "Results", font_size=18, color=ORANGE, bold=True)
+
+res_box3 = slide.shapes.add_textbox(Inches(7.2), Inches(3.95), Inches(5.5), Inches(2.4))
+tf_res3 = res_box3.text_frame
+tf_res3.word_wrap = True
+res_bullets3 = [
+    "Mean relative error of only 6.24% for delay prediction on test networks 10x larger than training networks",
+    "Worst-case accuracy on completely unseen topologies and routing: MRE of 15.4%",
+    "Matched accuracy of packet-level simulators but runs orders of magnitude faster",
+    "Supports real-world features like multi-queue QoS scheduling \u2014 not just toy scenarios",
+]
+add_bullet_slide_content(tf_res3, [f"\u2022 {b}" for b in res_bullets3], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 20, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 21 — Ericsson's AI-Driven Telemetry
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1074,11 +1172,11 @@ add_card(
 )
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 20, TOTAL_SLIDES)
+add_slide_number(slide, 21, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 21 — Emerging Trends: 6G & GenAI
+# SLIDE 22 — Emerging Trends: 6G & GenAI
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1113,11 +1211,11 @@ add_card(slide, Inches(6.75), Inches(5.25), Inches(5.65), Inches(1.3),
          title_color=ORANGE, border_color=ORANGE, body_size=12)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 21, TOTAL_SLIDES)
+add_slide_number(slide, 22, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 22 — Open Challenges
+# SLIDE 23 — Open Challenges
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1154,11 +1252,11 @@ for i, (title, desc) in enumerate(challenges):
                 desc, font_size=12, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 22, TOTAL_SLIDES)
+add_slide_number(slide, 23, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 23 — Conclusion & Key Takeaways
+# SLIDE 24 — Conclusion & Key Takeaways
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1196,11 +1294,11 @@ for i, (title, desc) in enumerate(takeaways):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 23, TOTAL_SLIDES)
+add_slide_number(slide, 24, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 24 — Thank You & Q&A
+# SLIDE 25 — Thank You & Q&A
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -1228,11 +1326,11 @@ add_textbox(slide, Inches(1.5), Inches(5.2), Inches(10.3), Inches(0.5),
             "NET3006A — Machine Learning for Network Telemetry",
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_slide_number(slide, 24, TOTAL_SLIDES)
+add_slide_number(slide, 25, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 25 — References
+# SLIDE 26 — References
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1271,7 +1369,7 @@ for i, ref in enumerate(references):
     p.space_after = Pt(4)
     p.space_before = Pt(1)
 
-add_slide_number(slide, 25, TOTAL_SLIDES)
+add_slide_number(slide, 26, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
