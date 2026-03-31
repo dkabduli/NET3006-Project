@@ -175,7 +175,7 @@ def make_title_subtitle(slide, title, subtitle, presenter,
     add_presenter_tag(slide, presenter)
 
 
-TOTAL_SLIDES = 24
+TOTAL_SLIDES = 25
 ASSET_DIR = os.path.join(
     os.path.expanduser("~"),
     ".cursor",
@@ -943,7 +943,105 @@ add_slide_number(slide, 18, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 19 — Ericsson's AI-Driven Telemetry
+# SLIDE 19 — Case Study: ML for Internet Traffic Prediction (Mazen)
+# ═══════════════════════════════════════════════════════════════
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+add_bg(slide)
+add_accent_bar(slide, color=ACCENT_GOLD)
+add_bottom_bar(slide, color=ACCENT_TEAL)
+make_title_subtitle(slide, "Case Study: Predicting Internet Traffic from Telemetry Data",
+                    None, "Mazen Alhassan")
+
+# ── Section 1: The Problem ──
+add_textbox(slide, Inches(0.8), Inches(1.35), Inches(5.8), Inches(0.35),
+            "The Problem", font_size=18, color=ACCENT_BLUE, bold=True)
+
+prob_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.75), Inches(5.8), Inches(1.6))
+tf_p = prob_box.text_frame
+tf_p.word_wrap = True
+p_bullets = [
+    "Operators need to predict future traffic volumes to avoid congestion and plan capacity",
+    "Telemetry is collected by sampling SNMP MIB counters on router interfaces (e.g., every 5 min) \u2014 giving a time series of bits-per-second",
+    "Traditional methods like ARIMA struggle with sudden spikes and complex patterns in real network traffic",
+]
+add_bullet_slide_content(tf_p, [f"\u2022 {b}" for b in p_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Section 2: The Study ──
+add_textbox(slide, Inches(0.8), Inches(3.35), Inches(5.8), Inches(0.35),
+            "The Study: ConvLSTMTransNet (Pekar et al., 2024)", font_size=18, color=ACCENT_TEAL, bold=True)
+
+study_box2 = slide.shapes.add_textbox(Inches(0.8), Inches(3.75), Inches(5.8), Inches(2.6))
+tf_s = study_box2.text_frame
+tf_s.word_wrap = True
+s_bullets = [
+    "A hybrid deep learning model combining three architectures: CNN (local patterns), LSTM (time dependencies), and Transformer encoder (long-range relationships)",
+    "Trained and tested on real ISP telemetry from high-speed 40 Gbps ports on a provider edge router, sampled at 5-min intervals via SNMP",
+    "This is real Juniper Networks ISP telemetry \u2014 not synthetic data",
+]
+add_bullet_slide_content(tf_s, [f"\u2022 {b}" for b in s_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+# ── Right side: Architecture flow diagram ──
+add_textbox(slide, Inches(7.2), Inches(1.35), Inches(5.5), Inches(0.35),
+            "Model Architecture", font_size=18, color=ACCENT_PURPLE, bold=True,
+            alignment=PP_ALIGN.CENTER)
+
+arch_steps = [
+    ("Telemetry\nTime Series", ACCENT_BLUE),
+    ("CNN\nLocal Patterns", ACCENT_TEAL),
+    ("LSTM\nTime Deps", ACCENT_PURPLE),
+    ("Transformer\nLong-Range", ORANGE),
+    ("Traffic\nPrediction", ACCENT_GOLD),
+]
+
+a_w = Inches(1.65)
+a_h = Inches(0.85)
+a_x = Inches(7.0)
+for i, (label, color) in enumerate(arch_steps):
+    row = i // 3
+    col = i % 3
+    x = a_x + col * Inches(1.85)
+    y = Inches(1.9) + row * Inches(1.35)
+    box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, a_w, a_h)
+    box.fill.solid()
+    box.fill.fore_color.rgb = RGBColor(0x14, 0x18, 0x32)
+    box.line.color.rgb = color
+    box.line.width = Pt(1.5)
+    add_textbox(slide, x, y + Inches(0.12), a_w, a_h - Inches(0.15),
+                label, font_size=12, color=color, bold=True, alignment=PP_ALIGN.CENTER)
+    if col < 2 and i < len(arch_steps) - 1:
+        arrow = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW,
+            x + a_w, y + Inches(0.28), Inches(0.2), Inches(0.2))
+        arrow.fill.solid()
+        arrow.fill.fore_color.rgb = MID_GRAY
+        arrow.line.fill.background()
+
+d_arrow = slide.shapes.add_shape(MSO_SHAPE.DOWN_ARROW,
+    a_x + Inches(5.1), Inches(2.75), Inches(0.2), Inches(0.4))
+d_arrow.fill.solid()
+d_arrow.fill.fore_color.rgb = MID_GRAY
+d_arrow.line.fill.background()
+
+# ── Right side bottom: Results ──
+add_textbox(slide, Inches(7.2), Inches(3.55), Inches(5.5), Inches(0.35),
+            "Results", font_size=18, color=ORANGE, bold=True)
+
+res_box2 = slide.shapes.add_textbox(Inches(7.2), Inches(3.95), Inches(5.5), Inches(2.4))
+tf_r = res_box2.text_frame
+tf_r.word_wrap = True
+r_bullets = [
+    "Compared against three baselines: plain RNN, LSTM, and GRU",
+    "ConvLSTMTransNet outperformed all three by ~10% better accuracy (MAE, RMSE, WAPE)",
+    "Combining CNN + LSTM + Transformer captures both short-term spikes and long-term trends better than any single model",
+    "Trade-off noted: more complex models need more compute and training time",
+]
+add_bullet_slide_content(tf_r, [f"\u2022 {b}" for b in r_bullets], font_size=13, color=LIGHT_GRAY, spacing=6)
+
+add_presenter_tag(slide, "Mazen Alhassan", ACCENT_GOLD)
+add_slide_number(slide, 19, TOTAL_SLIDES)
+
+
+# ═══════════════════════════════════════════════════════════════
+# SLIDE 20 — Ericsson's AI-Driven Telemetry
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -976,11 +1074,11 @@ add_card(
 )
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 19, TOTAL_SLIDES)
+add_slide_number(slide, 20, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 20 — Emerging Trends: 6G & GenAI
+# SLIDE 21 — Emerging Trends: 6G & GenAI
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1015,11 +1113,11 @@ add_card(slide, Inches(6.75), Inches(5.25), Inches(5.65), Inches(1.3),
          title_color=ORANGE, border_color=ORANGE, body_size=12)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 20, TOTAL_SLIDES)
+add_slide_number(slide, 21, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 21 — Open Challenges
+# SLIDE 22 — Open Challenges
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1056,11 +1154,11 @@ for i, (title, desc) in enumerate(challenges):
                 desc, font_size=12, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 21, TOTAL_SLIDES)
+add_slide_number(slide, 22, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 22 — Conclusion & Key Takeaways
+# SLIDE 23 — Conclusion & Key Takeaways
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1098,11 +1196,11 @@ for i, (title, desc) in enumerate(takeaways):
                 desc, font_size=14, color=LIGHT_GRAY)
 
 add_presenter_tag(slide, "Hashim Kshim", ACCENT_PURPLE)
-add_slide_number(slide, 22, TOTAL_SLIDES)
+add_slide_number(slide, 23, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 23 — Thank You & Q&A
+# SLIDE 24 — Thank You & Q&A
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide, SECTION_BG)
@@ -1130,11 +1228,11 @@ add_textbox(slide, Inches(1.5), Inches(5.2), Inches(10.3), Inches(0.5),
             "NET3006A — Machine Learning for Network Telemetry",
             font_size=16, color=MID_GRAY, alignment=PP_ALIGN.CENTER)
 
-add_slide_number(slide, 23, TOTAL_SLIDES)
+add_slide_number(slide, 24, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
-# SLIDE 24 — References
+# SLIDE 25 — References
 # ═══════════════════════════════════════════════════════════════
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_bg(slide)
@@ -1173,7 +1271,7 @@ for i, ref in enumerate(references):
     p.space_after = Pt(4)
     p.space_before = Pt(1)
 
-add_slide_number(slide, 24, TOTAL_SLIDES)
+add_slide_number(slide, 25, TOTAL_SLIDES)
 
 
 # ═══════════════════════════════════════════════════════════════
